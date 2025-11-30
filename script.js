@@ -101,6 +101,7 @@ function triggerWinFlicker() {
 // Spin handling
 function spin() {
     if (isSpinning) return;
+    playSound(soundSpin);
 
     messageEl.textContent = "";
     messageEl.className = "message";
@@ -134,32 +135,25 @@ function spin() {
             return symbol;
         });
 
-        const winAmount = evaluateWin(resultSymbols, betAmount);
-
         if (winAmount > 0) {
-            credits += winAmount;
-            updateCreditsDisplay();
+    credits += winAmount;
+    updateCreditsDisplay();
 
-            lastWin = winAmount;
-            updateLastWinDisplay();
+    lastWin = winAmount;
+    updateLastWinDisplay();
 
-            messageEl.textContent = `WIN +${winAmount} credits`;
-            messageEl.classList.add("win");
-            triggerWinFlicker();
-        } else {
-            lastWin = -betAmount;
-            updateLastWinDisplay();
+    messageEl.textContent = `WIN +${winAmount} credits`;
+    messageEl.classList.add("win");
+    triggerWinFlicker();
+    playSound(soundWin);
+} else {
+    lastWin = -betAmount;
+    updateLastWinDisplay();
 
-            messageEl.textContent = "No win. Try again.";
-            messageEl.classList.add("lose");
-        }
-
-        isSpinning = false;
-        spinBtn.disabled = false;
-        spinBtn.textContent = "SPIN";
-    }, 650);
-}
-
+    messageEl.textContent = "No win. Try again.";
+    messageEl.classList.add("lose");
+            
+        
 function evaluateWin(symbols, bet) {
     const [a, b, c] = symbols;
     if (a.key === b.key && b.key === c.key) {
