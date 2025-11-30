@@ -567,19 +567,19 @@ main {
 /* Demo symbol classes map to your PNGs */
 
 .symbol-seven {
-    background-image: url("assets/symbol-seven.png");
+    background-image: url("symbol-seven.png");
 }
 
 .symbol-star {
-    background-image: url("assets/symbol-star.png");
+    background-image: url("symbol-star.png");
 }
 
 .symbol-cherry {
-    background-image: url("assets/symbol-cherry.png");
+    background-image: url("symbol-cherry.png");
 }
 
 .symbol-bar {
-    background-image: url("assets/symbol-bar.png");
+    background-image: url("symbol-bar.png");
 }
 
 .payout-multiplier {
