@@ -64,6 +64,13 @@ const statTotalRouWinsEl   = document.getElementById("stat-total-rou-wins");
 const statBiggestWinEl     = document.getElementById("stat-biggest-win");
 const statSessionNetEl     = document.getElementById("stat-session-net");
 
+// Settings DOM
+const settingsBtn        = document.getElementById("settings-btn");
+const settingsOverlay    = document.getElementById("settings-overlay");
+const settingsCloseBtn   = document.getElementById("settings-close-btn");
+const settingSoundToggle = document.getElementById("setting-sound-toggle");
+const settingFastToggle  = document.getElementById("setting-fast-toggle");
+
 // Audio elements
 const soundSpin  = document.getElementById("sound-spin");
 const soundWin   = document.getElementById("sound-win");
@@ -101,6 +108,12 @@ let stats = {
 };
 
 let sessionStartCredits = 0;
+
+// Settings state
+let settings = {
+    soundOn: true,
+    fastMode: false
+};
 
 // Helpers: credits & stats
 function loadCredits() {
@@ -203,6 +216,53 @@ function updateLastWinDisplay() {
     }
 }
 
+// Settings helpers
+function loadSettings() {
+    const stored = localStorage.getItem("bunker_settings_v1");
+    if (stored) {
+        try {
+            const parsed = JSON.parse(stored);
+            settings.soundOn = parsed.soundOn !== false; // default true
+            settings.fastMode = !!parsed.fastMode;
+        } catch (e) {
+            settings = { soundOn: true, fastMode: false };
+        }
+    }
+    applySettingsToUI();
+}
+
+function saveSettings() {
+    localStorage.setItem("bunker_settings_v1", JSON.stringify(settings));
+}
+
+function applySettingsToUI() {
+    if (settingSoundToggle) {
+        settingSoundToggle.classList.toggle("toggle-on", settings.soundOn);
+    }
+    if (settingFastToggle) {
+        settingFastToggle.classList.toggle("toggle-on", settings.fastMode);
+    }
+}
+
+function openSettings() {
+    if (!settingsOverlay) return;
+    settingsOverlay.classList.add("open");
+}
+
+function closeSettings() {
+    if (!settingsOverlay) return;
+    settingsOverlay.classList.remove("open");
+}
+
+// Timing helpers
+function getSlotSpinDuration() {
+    return settings.fastMode ? 350 : 650;
+}
+
+function getRouletteSpinDuration() {
+    return settings.fastMode ? 500 : 900;
+}
+
 // Slots helpers
 function randomSymbol() {
     const index = Math.floor(Math.random() * SYMBOLS.length);
@@ -219,7 +279,7 @@ function triggerWinFlicker() {
 }
 
 function playSound(audioEl) {
-    if (!audioEl) return;
+    if (!audioEl || !settings.soundOn) return;
     try {
         audioEl.currentTime = 0;
         audioEl.play();
@@ -294,7 +354,7 @@ function spin() {
         isSpinning = false;
         spinBtn.disabled = false;
         spinBtn.textContent = "SPIN";
-    }, 650);
+    }, getSlotSpinDuration());
 }
 
 function evaluateWin(symbols, bet) {
@@ -619,73 +679,8 @@ function spinRoulette() {
         if (rouletteWheelEl) {
             rouletteWheelEl.classList.remove("spinning");
         }
-    }, 900);
+    }, getRouletteSpinDuration());
 }
 
 // Events – Slots
-spinBtn.addEventListener("click", spin);
-
-addCreditsBtn.addEventListener("click", () => {
-    playSound(soundClick);
-
-    const boost = 500;
-    credits += boost;
-    updateCreditsDisplay();
-
-    lastWin = boost;
-    updateLastWinDisplay();
-
-    messageEl.textContent = `Added +${boost} demo credits.`;
-    messageEl.className = "message win";
-});
-
-resetCreditsBtn.addEventListener("click", () => {
-    playSound(soundClick);
-
-    const confirmReset = window.confirm(
-        "Reset your BUNKER Casino progress? This will set credits back to 500 and clear history (including stats)."
-    );
-    if (!confirmReset) return;
-
-    credits = 500;
-    lastWin = 0;
-    stats = {
-        totalSpins: 0,
-        totalBjHands: 0,
-        totalBjWins: 0,
-        totalRouSpins: 0,
-        totalRouWins: 0,
-        biggestWin: 0
-    };
-    localStorage.removeItem("bunker_slots_credits");
-    localStorage.removeItem("bunker_stats_v1");
-
-    sessionStartCredits = credits;
-    updateCreditsDisplay();
-    updateLastWinDisplay();
-    updateStatsDisplay();
-    updateSessionNetDisplay();
-
-    messageEl.textContent = "Progress reset. Back to 500 credits.";
-    messageEl.className = "message";
-});
-
-betDecreaseBtn.addEventListener("click", () => {
-    betAmount = Math.max(MIN_BET, betAmount - 5);
-    updateBetDisplay();
-});
-
-betIncreaseBtn.addEventListener("click", () => {
-    betAmount = Math.min(MAX_BET, betAmount + 5);
-    updateBetDisplay();
-});
-
-// Events – Blackjack
-bjBetDecreaseBtn.addEventListener("click", () => {
-    bjBetAmount = Math.max(MIN_BET, bjBetAmount - 5);
-    bjBetAmountEl.textContent = bjBetAmount;
-});
-
-bjBetIncreaseBtn.addEventListener("click", () => {
-    bjBetAmount = Math.min(MAX_BET, bjBetAmount + 5);
-    b
+spinBtn.addEventL
