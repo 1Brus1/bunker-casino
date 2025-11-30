@@ -1,116 +1,32 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <title>BUNKER CLOTHING</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <link rel="manifest" href="manifest.json">
-  <link rel="icon" type="image/png" href="assets/favicon.png">
-  <link rel="icon" type="image/x-icon" href="assets/favicon.ico">
-  <link rel="stylesheet" href="style.min.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BUNKER Slots</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
+    <div class="container">
 
-  <!-- Scroll progress -->
-  <div id="scroll-progress"></div>
+        <h1 class="title">BUNKER SLOTS</h1>
 
-  <!-- Preloader -->
-  <div id="preloader"><div class="preloader-inner"><span class="brand">BUNKER</span></div></div>
+        <div class="credits">
+            Credits: <span id="credits">0</span>
+        </div>
 
-  <!-- Header -->
-  <header class="site-header">
-    <img src="assets/bunker_logo.png" alt="Bunker Clothing" class="logo glow-hover">
-    <nav class="nav">
-      <a href="#home">Home</a>
-      <a href="#shop">Shop</a>
-      <a href="#about">About</a>
-      <a href="#contact">Contact</a>
-      <button id="cartButton" class="cart-link" aria-label="Open cart">
-        <img src="assets/cart.svg" alt="" aria-hidden="true">
-        <span class="cart-text">Cart (<span id="cartCount">0</span>)</span>
-      </button>
-    </nav>
-  </header>
+        <div class="slot-machine">
+            <div class="reel" id="reel1">7</div>
+            <div class="reel" id="reel2">7</div>
+            <div class="reel" id="reel3">7</div>
+        </div>
 
-  <!-- Back to top -->
-  <button id="backToTop" aria-label="Back to top">↑</button>
+        <button id="spin-btn">SPIN</button>
 
-  <!-- Custom cursor -->
-  <div id="cursor"></div>
+        <div class="message" id="message"></div>
 
-  <!-- Hero -->
-  <section id="home" class="hero section-animate">
-    <div class="hero-inner">
-      <h1 class="hero-title">BUNKER CLOTHING</h1>
-      <p class="hero-subtitle">Built for Comfort & Quality</p>
-      <a href="#shop" class="hero-btn btn">Shop Now</a>
     </div>
-  </section>
 
-  <!-- Shop -->
-  <section id="shop" class="section-animate">
-    <h2>Shop</h2>
-    <div class="product-grid">
-      <div class="product-card hover-lift" data-id="hoodie" data-name="Classic Hoodie" data-price="65">
-        <div class="p-name">Classic Hoodie</div>
-        <div class="price">$65</div>
-        <button class="btn add-to-cart">Add to Cart</button>
-      </div>
-      <div class="product-card hover-lift" data-id="tee" data-name="Urban Tee" data-price="30">
-        <div class="p-name">Urban Tee</div>
-        <div class="price">$30</div>
-        <button class="btn add-to-cart">Add to Cart</button>
-      </div>
-      <div class="product-card hover-lift" data-id="joggers" data-name="Comfy Joggers" data-price="55">
-        <div class="p-name">Comfy Joggers</div>
-        <div class="price">$55</div>
-        <button class="btn add-to-cart">Add to Cart</button>
-      </div>
-    </div>
-  </section>
-
-  <!-- About -->
-  <section id="about" class="section-animate">
-    <h2>About</h2>
-    <p>Bunker Clothing delivers minimalist streetwear designed for all-day comfort and clean aesthetics.</p>
-  </section>
-
-  <!-- Contact -->
-  <section id="contact" class="section-animate">
-    <h2>Contact</h2>
-    <p>Email us at <a href="mailto:info@bunkerclothing.com">info@bunkerclothing.com</a></p>
-  </section>
-
-  <!-- Cart Drawer -->
-  <aside id="cartDrawer" aria-hidden="true">
-    <div class="cart-header">
-      <h3>Your Cart</h3>
-      <button id="cartClose" aria-label="Close cart">✕</button>
-    </div>
-    <div id="cartItems" class="cart-items"></div>
-    <div class="cart-footer">
-      <div class="total">Total: $<span id="cartTotal">0</span></div>
-      <button id="checkoutBtn" class="btn primary">Checkout</button>
-      <button id="clearCartBtn" class="btn outline">Clear Cart</button>
-    </div>
-  </aside>
-
-  <!-- Toast -->
-  <div id="toast" role="status" aria-live="polite" aria-atomic="true"></div>
-
-  <!-- Footer with animation toggle -->
-  <footer class="site-footer">
-    <div class="anim-toggle">
-      <span>Animations</span>
-      <label class="switch">
-        <input type="checkbox" id="animSwitch" checked>
-        <span class="slider"></span>
-      </label>
-      <span id="animState">ON</span>
-    </div>
-    <p>© 2025 Bunker Clothing</p>
-  </footer>
-
-  <script src="script.min.js"></script>
+    <script src="script.js"></script>
 </body>
 </html>
