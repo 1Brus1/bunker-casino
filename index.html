@@ -87,41 +87,50 @@
         </section>
 
         <!-- PLAYER STATS -->
-        <section class="stats-section">
-            <h2 class="section-title">Player stats</h2>
-            <div class="stats-grid">
-                <div class="stat-card">
-                    <span class="stat-label">Total slot spins</span>
-                    <span class="stat-value" id="stat-total-spins">0</span>
-                </div>
-                <div class="stat-card">
-                    <span class="stat-label">Total blackjack hands</span>
-                    <span class="stat-value" id="stat-total-bj-hands">0</span>
-                </div>
-                <div class="stat-card">
-                    <span class="stat-label">Blackjack wins</span>
-                    <span class="stat-value" id="stat-total-bj-wins">0</span>
-                </div>
-                <div class="stat-card">
-                    <span class="stat-label">Total roulette spins</span>
-                    <span class="stat-value" id="stat-total-rou-spins">0</span>
-                </div>
-                <div class="stat-card">
-                    <span class="stat-label">Roulette wins</span>
-                    <span class="stat-value" id="stat-total-rou-wins">0</span>
-                </div>
-                <div class="stat-card">
-                    <span class="stat-label">Biggest win</span>
-                    <span class="stat-value" id="stat-biggest-win">0</span>
-                </div>
-            </div>
+    <section class="stats-section">
+    <h2 class="section-title">Player stats</h2>
+    <div class="stats-grid">
+        <div class="stat-card">
+            <span class="stat-label">Total slot spins</span>
+            <span class="stat-value" id="stat-total-spins">0</span>
+        </div>
+        <div class="stat-card">
+            <span class="stat-label">Total blackjack hands</span>
+            <span class="stat-value" id="stat-total-bj-hands">0</span>
+        </div>
+        <div class="stat-card">
+            <span class="stat-label">Blackjack wins</span>
+            <span class="stat-value" id="stat-total-bj-wins">0</span>
+        </div>
+        <div class="stat-card">
+            <span class="stat-label">Total roulette spins</span>
+            <span class="stat-value" id="stat-total-rou-spins">0</span>
+        </div>
+        <div class="stat-card">
+            <span class="stat-label">Roulette wins</span>
+            <span class="stat-value" id="stat-total-rou-wins">0</span>
+        </div>
+        <div class="stat-card">
+            <span class="stat-label">Biggest win</span>
+            <span class="stat-value" id="stat-biggest-win">0</span>
+        </div>
+    </div>
 
-            <p class="stats-session">
-                Session change:
-                <span id="stat-session-net">0</span>
-                credits
-            </p>
-        </section>
+    <p class="stats-session">
+        Session change:
+        <span id="stat-session-net">0</span>
+        credits
+    </p>
+
+    <!-- New: recent activity box -->
+    <div class="history-section">
+        <h3 class="history-title">Recent activity</h3>
+        <p class="history-empty" id="history-empty">
+            No games played yet. Spins, hands, and bets will show up here.
+        </p>
+        <ul class="history-list" id="history-list"></ul>
+    </div>
+    </section>
 
         <!-- GAMES GRID -->
         <section class="games-grid-section">
