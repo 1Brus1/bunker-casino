@@ -725,3 +725,171 @@ main {
         font-size: 9px;
     }
 }
+
+
+
+/* Blackjack section */
+
+.blackjack-section {
+    margin-top: 40px;
+}
+
+.blackjack-card {
+    background: var(--card);
+    border-radius: 20px;
+    padding: 20px 18px 18px;
+    box-shadow: 0 20px 45px rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    position: relative;
+    overflow: hidden;
+}
+
+.blackjack-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 18px;
+    margin-bottom: 16px;
+}
+
+.blackjack-title {
+    margin: 0 0 4px;
+    font-size: 20px;
+}
+
+.blackjack-subtitle {
+    margin: 0;
+    font-size: 13px;
+    color: var(--muted);
+}
+
+.blackjack-credits {
+    text-align: right;
+}
+
+.blackjack-credits span {
+    display: block;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: var(--muted);
+}
+
+.blackjack-credits strong {
+    display: block;
+    font-size: 20px;
+    color: var(--accent);
+    text-shadow: 0 0 12px rgba(57, 255, 20, 1);
+}
+
+.blackjack-body {
+    padding-top: 8px;
+}
+
+.blackjack-table {
+    border-radius: 14px;
+    padding: 14px 14px 10px;
+    background: radial-gradient(circle at top, rgba(57, 255, 20, 0.18), rgba(0, 0, 0, 0.9));
+    box-shadow: inset 0 0 24px rgba(0, 0, 0, 0.8);
+    margin-bottom: 14px;
+}
+
+.bj-row {
+    display: grid;
+    grid-template-columns: 70px 1fr 40px;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 8px;
+}
+
+.bj-label {
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: var(--muted);
+}
+
+.bj-hand {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.bj-card {
+    min-width: 30px;
+    padding: 4px 6px;
+    border-radius: 6px;
+    background: rgba(5, 7, 14, 0.95);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    font-size: 13px;
+    text-align: center;
+}
+
+.bj-card.red {
+    color: #ff7b7b;
+}
+
+.bj-card.hidden {
+    background: linear-gradient(135deg, rgba(57, 255, 20, 0.4), rgba(5, 7, 14, 1));
+    border-color: rgba(57, 255, 20, 0.9);
+    color: #020308;
+}
+
+.bj-score {
+    font-size: 14px;
+    font-weight: 600;
+    text-align: right;
+    color: var(--text);
+}
+
+.blackjack-controls {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 10px;
+}
+
+.bj-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.bj-message {
+    font-size: 13px;
+    min-height: 18px;
+    text-align: right;
+    color: var(--muted);
+}
+
+.bj-message.win {
+    color: var(--accent);
+    text-shadow: 0 0 8px rgba(57, 255, 20, 0.8);
+}
+
+.bj-message.lose {
+    color: var(--danger);
+}
+
+.bj-message.push {
+    color: var(--muted);
+}
+
+/* Blackjack responsive tweaks */
+@media (max-width: 720px) {
+    .blackjack-card {
+        padding: 16px 12px 16px;
+    }
+
+    .blackjack-controls {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .blackjack-credits {
+        text-align: left;
+    }
+    }
