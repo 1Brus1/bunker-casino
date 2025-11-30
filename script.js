@@ -197,6 +197,10 @@ betIncreaseBtn.addEventListener("click", () => {
     updateBetDisplay();
 });
 
+const soundSpin  = document.getElementById("sound-spin");
+const soundWin   = document.getElementById("sound-win");
+const soundClick = document.getElementById("sound-click");
+
 // Footer year
 if (YEAR_EL) {
     YEAR_EL.textContent = new Date().getFullYear();
