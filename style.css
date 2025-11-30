@@ -451,6 +451,29 @@ main {
 
 
 /* Games navigation bar */
+.games-nav-category {
+    display: inline-flex;
+    align-items: center;
+    padding: 2px 8px;
+    border-radius: 999px;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.16em;
+    margin-bottom: 4px;
+    color: var(--muted);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    background: rgba(10, 12, 22, 0.95);
+}
+
+.games-nav-category-slots {
+    border-color: rgba(57, 255, 20, 0.6);
+    color: var(--accent);
+    background: rgba(10, 20, 10, 0.95);
+}
+
+.games-nav-category-table {
+    border-color: rgba(255, 255, 255, 0.24);
+}
 
 .games-nav {
     margin-top: 30px;
