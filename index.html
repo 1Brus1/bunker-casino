@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
-
-    <head>
+<head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
@@ -15,7 +14,7 @@
           content="Play BUNKER Neon Slots with demo credits only. No real money, no signup." />
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://1brus1.github.io/bunker-casino/" />
-    <!-- Optional: set this to one of your symbols or a future banner image -->
+    <!-- You can change this to a banner image later -->
     <meta property="og:image" content="https://1brus1.github.io/bunker-casino/symbol-diamond.png" />
 
     <!-- Twitter card -->
@@ -25,16 +24,9 @@
           content="Neon-soaked, credit-only casino in your browser." />
     <meta name="twitter:image" content="https://1brus1.github.io/bunker-casino/symbol-diamond.png" />
 
-    <!-- Favicon (create a 64x64 or 128x128 PNG, drop it in repo root) -->
+    <!-- Favicon (place favicon.png in repo root) -->
     <link rel="icon" href="favicon.png" type="image/png" />
 
-    <link rel="stylesheet" href="style.css" />
-    </head>
-    
-<head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>BUNKER Casino | Slots</title>
     <link rel="stylesheet" href="style.css" />
 </head>
 <body>
@@ -58,18 +50,13 @@
                 <p class="hero-subtitle">
                     Neon-soaked, credit-only casino. No real money. Pure vibes.
                 </p>
-                    <div class="hero-actions">
-    <a href="#slots" class="primary-btn">Play Slots</a>
-    <button class="secondary-btn" id="add-credits-btn">
-        + Add Demo Credits
-    </button>
-    <button class="secondary-btn" id="reset-credits-btn">
-        Reset progress
-    </button>
-                    </div>
+                <div class="hero-actions">
                     <a href="#slots" class="primary-btn">Play Slots</a>
                     <button class="secondary-btn" id="add-credits-btn">
                         + Add Demo Credits
+                    </button>
+                    <button class="secondary-btn" id="reset-credits-btn">
+                        Reset progress
                     </button>
                 </div>
                 <div class="hero-metrics">
@@ -122,26 +109,18 @@
         <section id="slots" class="slots-section">
             <div class="slots-card neon-border">
                 <div class="slots-header">
-    <div>
-        <h2 class="slots-title">BUNKER Neon Slots</h2>
-        <p class="slots-subtitle">Bet credits, spin reels, chase triples.</p>
-    </div>
-    <div class="slots-credits">
-        <span>Credits</span>
-        <strong id="credits">0</strong>
-
-        <div class="last-win-chip">
-            <span class="last-win-label">Last win</span>
-            <span class="last-win-value" id="last-win">+0</span>
-        </div>
-    </div>
-                </div>
+                    <div>
                         <h2 class="slots-title">BUNKER Neon Slots</h2>
                         <p class="slots-subtitle">Bet credits, spin reels, chase triples.</p>
                     </div>
                     <div class="slots-credits">
                         <span>Credits</span>
                         <strong id="credits">0</strong>
+
+                        <div class="last-win-chip">
+                            <span class="last-win-label">Last win</span>
+                            <span class="last-win-value" id="last-win">0</span>
+                        </div>
                     </div>
                 </div>
 
