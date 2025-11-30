@@ -166,9 +166,11 @@ function evaluateWin(symbols, bet) {
 spinBtn.addEventListener("click", spin);
 
 addCreditsBtn.addEventListener("click", () => {
+    playSound(soundClick);
+
     const boost = 500;
-    credits += boost;
-    updateCreditsDisplay();
+    ...
+});
 
     lastWin = boost;
     updateLastWinDisplay();
@@ -177,12 +179,15 @@ addCreditsBtn.addEventListener("click", () => {
     messageEl.className = "message win";
 });
 
-resetCreditsBtn.addEventListener("click", () => {
+    resetCreditsBtn.addEventListener("click", () => {
+    playSound(soundClick);
     const confirmReset = window.confirm(
         "Reset your BUNKER Casino progress? This will set credits back to 500 and clear history."
     );
     if (!confirmReset) return;
 
+    ...
+});
     credits = 500;
     lastWin = 0;
     localStorage.removeItem("bunker_slots_credits");
@@ -194,11 +199,13 @@ resetCreditsBtn.addEventListener("click", () => {
 });
 
 betDecreaseBtn.addEventListener("click", () => {
+    playSound(soundClick);
     betAmount = Math.max(MIN_BET, betAmount - 5);
     updateBetDisplay();
 });
 
 betIncreaseBtn.addEventListener("click", () => {
+    playSound(soundClick);
     betAmount = Math.min(MAX_BET, betAmount + 5);
     updateBetDisplay();
 });
