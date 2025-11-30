@@ -95,7 +95,7 @@ function playSound(audioEl) {
         audioEl.currentTime = 0;
         audioEl.play();
     } catch (e) {
-        // ignore errors (e.g. autoplay restriction before first user interaction)
+        // ignore autoplay errors
     }
 }
 
