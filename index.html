@@ -83,32 +83,31 @@
                         <span class="metric-value">96%</span>
                     </div>
                 </div>
+
+                <!-- GAMES NAV BAR inside hero -->
+                <div class="games-nav hero-games-nav">
+                  <div class="games-nav-row">
+                    <a href="#slots" class="games-nav-item">
+                      <span class="games-nav-category games-nav-category-slots">Slots</span>
+                      <span class="games-nav-label">BUNKER Neon Slots</span>
+                      <span class="games-nav-caption">3-reel neon machine</span>
+                    </a>
+
+                    <a href="#blackjack" class="games-nav-item">
+                      <span class="games-nav-category games-nav-category-table">Table game</span>
+                      <span class="games-nav-label">Blackjack</span>
+                      <span class="games-nav-caption">Beat the dealer</span>
+                    </a>
+
+                    <a href="#roulette" class="games-nav-item">
+                      <span class="games-nav-category games-nav-category-table">Table game</span>
+                      <span class="games-nav-label">Roulette</span>
+                      <span class="games-nav-caption">European, color bets</span>
+                    </a>
+                  </div>
+                </div>
             </div>
         </section>
-
-    <!-- GAMES NAV BAR (just under hero) -->
-<section class="games-nav">
-  <div class="games-nav-row">
-    <a href="#slots" class="games-nav-item">
-      <span class="games-nav-category games-nav-category-slots">Slots</span>
-      <span class="games-nav-label">BUNKER Neon Slots</span>
-      <span class="games-nav-caption">3-reel neon machine</span>
-    </a>
-
-    <a href="#blackjack" class="games-nav-item">
-      <span class="games-nav-category games-nav-category-table">Table game</span>
-      <span class="games-nav-label">Blackjack</span>
-      <span class="games-nav-caption">Beat the dealer</span>
-    </a>
-
-    <a href="#roulette" class="games-nav-item">
-      <span class="games-nav-category games-nav-category-table">Table game</span>
-      <span class="games-nav-label">Roulette</span>
-      <span class="games-nav-caption">European, color bets</span>
-    </a>
-  </div>
-</section>
-        
 
         <!-- PLAYER STATS -->
         <section class="stats-section">
@@ -156,9 +155,9 @@
             </div>
         </section>
 
-        <!-- GAMES GRID -->
+        <!-- GAMES GRID SECTION (optional marketing cards) -->
         <section class="games-grid-section">
-            <h2 class="section-title">Games</h2>
+            <h2 class="section-title">Games overview</h2>
             <div class="games-grid">
                 <article class="game-card">
                     <div class="game-tag">Featured</div>
@@ -201,24 +200,6 @@
             </div>
         </section>
 
-
-        <!-- GAMES NAV BAR -->
-<section class="games-nav">
-  <h2 class="section-title">Games</h2>
-  <div class="games-nav-row">
-    <a href="#slots" class="games-nav-item">
-      <span class="games-nav-category games-nav-category-slots">Slots</span>
-      <span class="games-nav-label">BUNKER Neon Slots</span>
-      <span class="games-nav-caption">3-reel neon machine</span>
-    </a>
-
-    <a href="#blackjack" class="games-nav-item">
-      <span class="games-nav-category games-nav-category-table">Table game</span>
-      <span class="games-nav-label">Blackjack</span>
-      <span class="games-nav-caption">Beat the dealer</span>
-    </a>
-
-        
         <!-- SLOTS SECTION -->
         <section id="slots" class="slots-section">
             <div class="slots-card neon-border">
@@ -390,6 +371,10 @@
                         <div class="roulette-result">
                             <span class="roulette-label">Last result</span>
                             <span class="roulette-result-value" id="rou-last-result">–</span>
+                        </div>
+                        <div class="roulette-history">
+                            <span class="roulette-label">History</span>
+                            <div class="roulette-history-list" id="rou-history-list"></div>
                         </div>
                         <div class="roulette-message" id="rou-message"></div>
                     </div>

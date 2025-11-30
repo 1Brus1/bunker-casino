@@ -54,6 +54,7 @@ const rouColorRedBtn    = document.getElementById("rou-color-red");
 const rouColorBlackBtn  = document.getElementById("rou-color-black");
 const rouColorGreenBtn  = document.getElementById("rou-color-green");
 const rouletteWheelEl   = document.getElementById("roulette-wheel");
+const rouHistoryListEl  = document.getElementById("rou-history-list");
 
 // Stats DOM
 const statTotalSpinsEl     = document.getElementById("stat-total-spins");
@@ -100,6 +101,8 @@ let bjCurrentBet = 0;
 let rouBetAmount    = 10;
 let rouSelectedColor = "red"; // "red" | "black" | "green"
 let rouIsSpinning   = false;
+let rouHistory      = [];
+const MAX_ROU_HISTORY = 12;
 
 // Stats state
 let stats = {
@@ -759,6 +762,36 @@ function evaluateRouletteWin(result, bet, selectedColor) {
     return { winAmount: payout };
 }
 
+// Roulette history (ball history)
+function addRouletteHistoryEntry(result) {
+    rouHistory.unshift(result);
+    if (rouHistory.length > MAX_ROU_HISTORY) {
+        rouHistory = rouHistory.slice(0, MAX_ROU_HISTORY);
+    }
+    renderRouletteHistory();
+}
+
+function renderRouletteHistory() {
+    if (!rouHistoryListEl) return;
+    rouHistoryListEl.innerHTML = "";
+
+    rouHistory.forEach((entry) => {
+        const chip = document.createElement("div");
+        chip.className = "roulette-history-chip";
+
+        if (entry.color === "red") {
+            chip.classList.add("roulette-history-red");
+        } else if (entry.color === "black") {
+            chip.classList.add("roulette-history-black");
+        } else {
+            chip.classList.add("roulette-history-green");
+        }
+
+        chip.textContent = entry.number;
+        rouHistoryListEl.appendChild(chip);
+    });
+}
+
 function spinRoulette() {
     if (rouIsSpinning) return;
 
@@ -793,11 +826,15 @@ function spinRoulette() {
         const { winAmount } = evaluateRouletteWin(result, rouBetAmount, rouSelectedColor);
         const net = winAmount - rouBetAmount;
 
+        // Update last result display
         if (rouLastResultEl) {
             rouLastResultEl.textContent = `${result.number} ${result.color.toUpperCase()}`;
             rouLastResultEl.classList.remove("roulette-last-red", "roulette-last-black", "roulette-last-green");
             rouLastResultEl.classList.add(`roulette-last-${result.color}`);
         }
+
+        // Update ball history
+        addRouletteHistoryEntry(result);
 
         if (winAmount > 0) {
             credits += winAmount;
@@ -886,6 +923,7 @@ if (resetCreditsBtn) {
             biggestWin: 0
         };
         historyEntries = [];
+        rouHistory = [];
         localStorage.removeItem("bunker_slots_credits");
         localStorage.removeItem("bunker_stats_v1");
         localStorage.removeItem(HISTORY_KEY);
@@ -896,6 +934,7 @@ if (resetCreditsBtn) {
         updateStatsDisplay();
         updateSessionNetDisplay();
         renderHistory();
+        renderRouletteHistory();
 
         if (messageEl) {
             messageEl.textContent = "Progress reset. Back to 500 credits.";
@@ -1037,6 +1076,7 @@ if (bjBetAmountEl)  bjBetAmountEl.textContent = bjBetAmount;
 if (rouBetAmountEl) rouBetAmountEl.textContent = rouBetAmount;
 setRouletteColor("red");
 updateSessionNetDisplay();
+renderRouletteHistory();
 reelEls.forEach((reel) => {
     const symbol = randomSymbol();
     setReelSymbol(reel, symbol);

@@ -45,7 +45,7 @@ body {
     opacity: 0.8;
     pointer-events: none;
     z-index: -1;
-    animation: bgPulse 7s ease-in-out infinite alternate;
+    animation: bgPulse 10s ease-in-out infinite alternate;
 }
 
 @keyframes bgPulse {
@@ -103,7 +103,7 @@ main {
     align-items: center;
     justify-content: center;
     font-weight: 700;
-    font-size: 20px;
+    font-size: 16px;
     color: #020308;
 }
 
@@ -116,13 +116,13 @@ main {
 .logo-title {
     font-weight: 700;
     letter-spacing: 0.16em;
-    font-size: 20px;
+    font-size: 13px;
     text-transform: uppercase;
     color: var(--text);
 }
 
 .logo-subtitle {
-    font-size: 15px;
+    font-size: 10px;
     text-transform: uppercase;
     letter-spacing: 0.18em;
     color: var(--muted);
@@ -327,32 +327,32 @@ main {
 }
 
 .hero-content {
-    max-width: 620px;
+    max-width: 740px;
 }
 
 .hero-title {
-    font-size: clamp(17px, 3.2vw, 30px);
+    font-size: clamp(26px, 3.2vw, 34px);
     line-height: 1.15;
-    margin-bottom: 7px;
+    margin-bottom: 10px;
 }
 
 .hero-title span {
     color: var(--accent);
-    text-shadow: 0 0 6px rgba(57, 255, 20, 0);
+    text-shadow: 0 0 6px rgba(57, 255, 20, 0.55);
 }
 
 .hero-subtitle {
     color: var(--muted);
     max-width: 480px;
     margin-bottom: 24px;
-    font-size: 12px;
+    font-size: 15px;
 }
 
 .hero-actions {
     display: flex;
     flex-wrap: wrap;
     gap: 12px;
-    margin-bottom: 24px;
+    margin-bottom: 18px;
 }
 
 /* Buttons */
@@ -449,106 +449,10 @@ main {
     color: var(--muted);
 }
 
-
-/* Games navigation bar */
-.games-nav-category {
-    display: inline-flex;
-    align-items: center;
-    padding: 2px 8px;
-    border-radius: 999px;
-    font-size: 10px;
-    text-transform: uppercase;
-    letter-spacing: 0.16em;
-    margin-bottom: 4px;
-    color: var(--muted);
-    border: 1px solid rgba(255, 255, 255, 0.12);
-    background: rgba(10, 12, 22, 0.95);
-}
-
-.games-nav-category-slots {
-    border-color: rgba(57, 255, 20, 0.6);
-    color: var(--accent);
-    background: rgba(10, 20, 10, 0.95);
-}
-
-.games-nav-category-table {
-    border-color: rgba(255, 255, 255, 0.24);
-}
-
-.games-nav {
-    margin-top: 30px;
-    margin-bottom: 10px;
-}
-
-.games-nav-row {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-}
-
-.games-nav-item {
-    flex: 1 1 140px;
-    min-width: 0;
-    padding: 10px 12px;
-    border-radius: 999px;
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    background: rgba(10, 12, 22, 0.9);
-    text-decoration: none;
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
-    position: relative;
-    cursor: pointer;
-    transition: border-color 0.12s ease, box-shadow 0.12s ease, background 0.12s ease,
-        transform 0.08s ease;
-}
-
-.games-nav-item::before {
-    content: "";
-    position: absolute;
-    inset: 0;
-    background: radial-gradient(circle at 0 0, rgba(57, 255, 20, 0.18), transparent 60%);
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 0.18s ease;
-}
-
-.games-nav-label {
-    font-size: 13px;
-    font-weight: 600;
-    color: var(--text);
-}
-
-.games-nav-caption {
-    font-size: 11px;
-    color: var(--muted);
-    white-space: nowrap;
-    text-overflow: ellipsis;
-    overflow: hidden;
-}
-
-.games-nav-item:hover {
-    border-color: rgba(57, 255, 20, 0.65);
-    box-shadow: 0 0 14px rgba(57, 255, 20, 0.7);
-    background: rgba(8, 14, 10, 0.95);
-    transform: translateY(-1px);
-}
-
-.games-nav-item:hover::before {
-    opacity: 1;
-}
-
-@media (max-width: 600px) {
-    .games-nav-row {
-        flex-direction: column;
-    }
-    }
-
-
-  /* Game cards */
+/* Game cards overview */
 
 .games-grid-section {
-    margin-top: 30px;
+    margin-top: 24px;
 }
 
 .games-grid {
@@ -620,7 +524,7 @@ main {
 /* Player stats */
 
 .stats-section {
-    margin-top: 32px;
+    margin-top: 26px;
 }
 
 .stats-grid {
@@ -735,10 +639,110 @@ main {
     color: var(--danger);
 }
 
+/* Games navigation bar inside hero */
+
+.games-nav {
+    margin-top: 16px;
+    margin-bottom: 4px;
+}
+
+.hero-games-nav {
+    margin-top: 22px;
+    margin-bottom: 4px;
+}
+
+.games-nav-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.games-nav-item {
+    flex: 1 1 140px;
+    min-width: 0;
+    padding: 10px 12px;
+    border-radius: 999px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    background: rgba(10, 12, 22, 0.9);
+    text-decoration: none;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    position: relative;
+    cursor: pointer;
+    transition: border-color 0.12s ease, box-shadow 0.12s ease, background 0.12s ease,
+        transform 0.08s ease;
+}
+
+.games-nav-item::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at 0 0, rgba(57, 255, 20, 0.18), transparent 60%);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.18s ease;
+}
+
+.games-nav-label {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text);
+}
+
+.games-nav-caption {
+    font-size: 11px;
+    color: var(--muted);
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+
+.games-nav-item:hover {
+    border-color: rgba(57, 255, 20, 0.65);
+    box-shadow: 0 0 14px rgba(57, 255, 20, 0.7);
+    background: rgba(8, 14, 10, 0.95);
+    transform: translateY(-1px);
+}
+
+.games-nav-item:hover::before {
+    opacity: 1;
+}
+
+.games-nav-category {
+    display: inline-flex;
+    align-items: center;
+    padding: 2px 8px;
+    border-radius: 999px;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.16em;
+    margin-bottom: 4px;
+    color: var(--muted);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    background: rgba(10, 12, 22, 0.95);
+}
+
+.games-nav-category-slots {
+    border-color: rgba(57, 255, 20, 0.6);
+    color: var(--accent);
+    background: rgba(10, 20, 10, 0.95);
+}
+
+.games-nav-category-table {
+    border-color: rgba(255, 255, 255, 0.24);
+}
+
+@media (max-width: 600px) {
+    .games-nav-row {
+        flex-direction: column;
+    }
+}
+
 /* Slots section */
 
 .slots-section {
-    margin-top: 40px;
+    margin-top: 26px;
 }
 
 .slots-card {
@@ -999,7 +1003,7 @@ main {
 /* Blackjack section */
 
 .blackjack-section {
-    margin-top: 40px;
+    margin-top: 32px;
 }
 
 .blackjack-card {
@@ -1149,7 +1153,7 @@ main {
 /* Roulette section */
 
 .roulette-section {
-    margin-top: 40px;
+    margin-top: 32px;
 }
 
 .roulette-card {
@@ -1335,6 +1339,7 @@ main {
     min-height: 18px;
     text-align: right;
     color: var(--muted);
+    flex: 1;
 }
 
 .roulette-message.win {
@@ -1359,6 +1364,50 @@ main {
 .roulette-last-green {
     color: #39ff14;
     text-shadow: 0 0 6px rgba(57, 255, 20, 0.9);
+}
+
+/* Roulette ball history */
+
+.roulette-history {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.roulette-history-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    max-width: 220px;
+}
+
+.roulette-history-chip {
+    width: 22px;
+    height: 22px;
+    border-radius: 999px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    font-weight: 600;
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    background: rgba(5, 7, 14, 0.9);
+}
+
+.roulette-history-red {
+    background: #d22;
+    color: #ffffff;
+}
+
+.roulette-history-black {
+    background: #111;
+    color: #f5f5f5;
+}
+
+.roulette-history-green {
+    background: #0c3;
+    color: #020308;
+    box-shadow: 0 0 8px rgba(57, 255, 20, 0.8);
 }
 
 /* Message */
