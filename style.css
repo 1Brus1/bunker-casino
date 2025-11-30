@@ -59,6 +59,44 @@ body {
     }
 }
 
+@keyframes headerDrop {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes logoGlow {
+    0% {
+        box-shadow:
+            0 0 10px rgba(57, 255, 20, 0.7),
+            0 0 22px rgba(57, 255, 20, 0.4);
+        transform: scale(1);
+    }
+    100% {
+        box-shadow:
+            0 0 18px rgba(57, 255, 20, 1),
+            0 0 32px rgba(57, 255, 20, 0.9);
+        transform: scale(1.04);
+    }
+}
+
+@keyframes header {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+
 /* Layout */
 
 main {
@@ -76,35 +114,53 @@ main {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 14px 20px;
-    background: linear-gradient(to bottom, rgba(0, 0, 0, 0.9), rgba(0, 0, 0, 0));
-    backdrop-filter: blur(20px);
+
+    padding: 20px 24px;
+    min-height: 76px;
+
+    background: linear-gradient(
+        to bottom,
+        rgba(0, 0, 0, 0.95),
+        rgba(0, 0, 0, 0.75),
+        rgba(0, 0, 0, 0)
+    );
+    backdrop-filter: blur(22px);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.9);
+
+    /* smooth drop-in animation */
+    opacity: 0;
+    transform: translateY(-10px);
+    animation: headerDrop 0.55s ease-out forwards;
 }
 
 .logo {
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 10px;
     text-decoration: none;
 }
 
 .logo-mark {
-    width: 28px;
-    height: 28px;
+    width: 34px;
+    height: 34px;
     border-radius: 999px;
     background: radial-gradient(
         circle at 30% 20%,
-        rgba(57, 255, 20, 0.9),
-        rgba(57, 255, 20, 0.15)
+        rgba(57, 255, 20, 1),
+        rgba(57, 255, 20, 0.18)
     );
-    border: 1px solid rgba(57, 255, 20, 0.8);
-    box-shadow: 0 0 12px rgba(57, 255, 20, 0.8);
+    border: 1px solid rgba(57, 255, 20, 0.9);
+    box-shadow:
+        0 0 10px rgba(57, 255, 20, 0.9),
+        0 0 26px rgba(57, 255, 20, 0.7);
     display: flex;
     align-items: center;
     justify-content: center;
     font-weight: 700;
-    font-size: 16px;
+    font-size: 18px;
     color: #020308;
+
+    animation: logoGlow 2.2s ease-in-out infinite alternate;
 }
 
 .logo-text {
@@ -115,47 +171,55 @@ main {
 
 .logo-title {
     font-weight: 700;
-    letter-spacing: 0.16em;
-    font-size: 13px;
+    letter-spacing: 0.18em;
+    font-size: 14px;
     text-transform: uppercase;
     color: var(--text);
 }
 
 .logo-subtitle {
-    font-size: 10px;
+    font-size: 11px;
     text-transform: uppercase;
-    letter-spacing: 0.18em;
+    letter-spacing: 0.19em;
     color: var(--muted);
 }
 
 .nav a {
-    margin-left: 18px;
-    font-size: 14px;
+    margin-left: 24px;
+    font-size: 15px;
     text-transform: uppercase;
-    letter-spacing: 0.15em;
+    letter-spacing: 0.18em;
     color: var(--muted);
     text-decoration: none;
     position: relative;
+    padding-bottom: 4px;
+    transition: color 0.16s ease, transform 0.12s ease;
 }
 
 .nav a::after {
     content: "";
     position: absolute;
     left: 0;
-    bottom: -4px;
+    bottom: 0;
     width: 0;
     height: 2px;
     background: var(--accent);
-    box-shadow: 0 0 12px var(--accent);
+    box-shadow: 0 0 14px var(--accent);
+    border-radius: 99px;
     transition: width 0.2s ease;
 }
 
 .nav a:hover {
     color: var(--text);
+    transform: translateY(-1px);
 }
 
 .nav a:hover::after {
     width: 100%;
+}
+
+.nav a:hover {
+    color: var(--text);
 }
 
 /* Header actions / settings */
