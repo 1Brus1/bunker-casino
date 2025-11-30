@@ -6,12 +6,12 @@
 
     <title>BUNKER Casino · Neon demo games (no real money)</title>
     <meta name="description"
-          content="BUNKER Casino is a neon-soaked, credit-only demo casino. Play fake-money slots and blackjack in your browser. No signup, no deposits." />
+          content="BUNKER Casino is a neon-soaked, credit-only demo casino. Play fake-money slots, blackjack and roulette in your browser. No signup, no deposits." />
 
     <!-- Open Graph / social share -->
     <meta property="og:title" content="BUNKER Casino · Neon demo games" />
     <meta property="og:description"
-          content="Play BUNKER Neon Slots and Blackjack with demo credits only. No real money, no signup." />
+          content="Play BUNKER Neon Slots, Blackjack and Roulette with demo credits only. No real money, no signup." />
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://1brus1.github.io/bunker-casino/" />
     <meta property="og:image" content="https://1brus1.github.io/bunker-casino/bunker-banner.png" />
@@ -45,6 +45,7 @@
             <a href="#home">Home</a>
             <a href="#slots">Slots</a>
             <a href="#blackjack">Blackjack</a>
+            <a href="#roulette">Roulette</a>
         </nav>
     </header>
 
@@ -78,6 +79,43 @@
             </div>
         </section>
 
+        <!-- PLAYER STATS -->
+        <section class="stats-section">
+            <h2 class="section-title">Player stats</h2>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <span class="stat-label">Total slot spins</span>
+                    <span class="stat-value" id="stat-total-spins">0</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-label">Total blackjack hands</span>
+                    <span class="stat-value" id="stat-total-bj-hands">0</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-label">Blackjack wins</span>
+                    <span class="stat-value" id="stat-total-bj-wins">0</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-label">Total roulette spins</span>
+                    <span class="stat-value" id="stat-total-rou-spins">0</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-label">Roulette wins</span>
+                    <span class="stat-value" id="stat-total-rou-wins">0</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-label">Biggest win</span>
+                    <span class="stat-value" id="stat-biggest-win">0</span>
+                </div>
+            </div>
+
+            <p class="stats-session">
+                Session change:
+                <span id="stat-session-net">0</span>
+                credits
+            </p>
+        </section>
+
         <!-- GAMES GRID -->
         <section class="games-grid-section">
             <h2 class="section-title">Games</h2>
@@ -109,41 +147,18 @@
                     <a href="#blackjack" class="primary-btn small">Play now</a>
                 </article>
 
-                <article class="game-card disabled">
-                    <div class="game-tag">Coming soon</div>
+                <article class="game-card">
+                    <div class="game-tag">New</div>
                     <h3>BUNKER Roulette</h3>
-                    <p>European wheel, clean layout, and bold neon highlights.</p>
+                    <p>European wheel with color bets and bold neon highlights.</p>
+                    <ul class="game-meta">
+                        <li>Fake credits only</li>
+                        <li>Bet on red / black / green</li>
+                        <li>Shared balance</li>
+                    </ul>
+                    <a href="#roulette" class="primary-btn small">Play now</a>
                 </article>
             </div>
-        </section>
-
-        <!-- SLOTS SECTION -->
-        <section class="stats-section">
-    <h2 class="section-title">Player stats</h2>
-    <div class="stats-grid">
-        <div class="stat-card">
-            <span class="stat-label">Total slot spins</span>
-            <span class="stat-value" id="stat-total-spins">0</span>
-        </div>
-        <div class="stat-card">
-            <span class="stat-label">Total blackjack hands</span>
-            <span class="stat-value" id="stat-total-bj-hands">0</span>
-        </div>
-        <div class="stat-card">
-            <span class="stat-label">Blackjack wins</span>
-            <span class="stat-value" id="stat-total-bj-wins">0</span>
-        </div>
-        <div class="stat-card">
-            <span class="stat-label">Biggest win</span>
-            <span class="stat-value" id="stat-biggest-win">0</span>
-        </div>
-    </div>
-
-    <p class="stats-session">
-        Session change:
-        <span id="stat-session-net">0</span>
-        credits
-    </p>
         </section>
 
         <!-- SLOTS SECTION -->
@@ -269,18 +284,62 @@
                 </div>
             </div>
         </section>
+
+        <!-- ROULETTE SECTION -->
+        <section id="roulette" class="roulette-section">
+            <div class="roulette-card neon-border">
+                <div class="roulette-header">
+                    <div>
+                        <h2 class="roulette-title">BUNKER Roulette</h2>
+                        <p class="roulette-subtitle">European wheel with red / black / green color bets.</p>
+                    </div>
+                    <div class="roulette-credits">
+                        <span>Credits</span>
+                        <strong id="rou-credits-mirror">0</strong>
+                    </div>
+                </div>
+
+                <div class="roulette-body">
+                    <div class="roulette-layout">
+                        <div class="roulette-wheel" id="roulette-wheel">
+                            <div class="roulette-wheel-inner"></div>
+                        </div>
+
+                        <div class="roulette-controls">
+                            <div class="bet-control">
+                                <span>Bet per spin</span>
+                                <div class="bet-input">
+                                    <button id="rou-bet-decrease">-</button>
+                                    <span id="rou-bet-amount">10</span>
+                                    <button id="rou-bet-increase">+</button>
+                                </div>
+                            </div>
+
+                            <div class="roulette-colors">
+                                <span class="roulette-label">Bet on color</span>
+                                <div class="roulette-color-buttons">
+                                    <button class="roulette-color-btn active" id="rou-color-red">Red</button>
+                                    <button class="roulette-color-btn" id="rou-color-black">Black</button>
+                                    <button class="roulette-color-btn" id="rou-color-green">Green</button>
+                                </div>
+                            </div>
+
+                            <button id="rou-spin-btn" class="primary-btn large">Spin wheel</button>
+                        </div>
+                    </div>
+
+                    <div class="roulette-footer">
+                        <div class="roulette-result">
+                            <span class="roulette-label">Last result</span>
+                            <span class="roulette-result-value" id="rou-last-result">–</span>
+                        </div>
+                        <div class="roulette-message" id="rou-message"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
     </main>
 
     <footer class="site-footer">
-        <p>Fake casino. No real money. Built for fun & UI experiments.</p>
-        <p>&copy; <span id="year"></span> BUNKER.</p>
-    </footer>
-
-    <!-- Sound effects -->
-    <audio id="sound-spin" src="sound-spin.wav" preload="auto"></audio>
-    <audio id="sound-win" src="sound-win.wav" preload="auto"></audio>
-    <audio id="sound-click" src="sound-click.wav" preload="auto"></audio>
-
-    <script src="script.js"></script>
-</body>
-</html>
+        <p>Fake casino. No real money. Built for fun &amp; UI experiments.</p>
+        <p>&copy; <span id="year"></
