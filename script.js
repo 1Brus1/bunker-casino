@@ -1,5 +1,4 @@
 // Symbol configuration
-// Each symbol has a key, image path, and payout multiplier for a triple.
 const SYMBOLS = [
     { key: "seven",   image: "symbol-seven.png",   multiplier: 50 },
     { key: "star",    image: "symbol-star.png",    multiplier: 25 },
@@ -20,9 +19,7 @@ const betAmountEl      = document.getElementById("bet-amount");
 const betDecreaseBtn   = document.getElementById("bet-decrease");
 const betIncreaseBtn   = document.getElementById("bet-increase");
 const lastWinEl        = document.getElementById("last-win");
-const soundSpin        = document.getElementById("sound-spin");
-const soundWin         = document.getElementById("sound-win");
-const soundClick       = document.getElementById("sound-click");
+
 const reelEls = [
     document.getElementById("reel1"),
     document.getElementById("reel2"),
@@ -31,21 +28,26 @@ const reelEls = [
 
 const YEAR_EL = document.getElementById("year");
 
+// Audio elements
+const soundSpin  = document.getElementById("sound-spin");
+const soundWin   = document.getElementById("sound-win");
+const soundClick = document.getElementById("sound-click");
+
 // State
-let credits  = 0;
+let credits   = 0;
 let betAmount = 10;
 let lastWin   = 0;
 const MIN_BET = 5;
 const MAX_BET = 100;
 let isSpinning = false;
 
-// Init helpers
+// Helpers
 function loadCredits() {
     const stored = localStorage.getItem("bunker_slots_credits");
     if (stored) {
         credits = parseInt(stored, 10) || 0;
     } else {
-        credits = 500; // starter pack
+        credits = 500;
     }
     updateCreditsDisplay();
 }
@@ -83,25 +85,26 @@ function setReelSymbol(reelEl, symbol) {
     reelEl.style.backgroundImage = `url(${symbol.image})`;
 }
 
+function triggerWinFlicker() {
+    // hook for future FX
+}
+
 function playSound(audioEl) {
     if (!audioEl) return;
     try {
         audioEl.currentTime = 0;
         audioEl.play();
     } catch (e) {
-        // Ignore play errors (e.g. autoplay restrictions)
+        // ignore errors (e.g. autoplay restriction before first user interaction)
     }
 }
 
-// Neon flicker hook (extend later if you want)
-function triggerWinFlicker() {
-    // Add visual FX here if you want (temporary class on body/card).
-}
-
-// Spin handling
+// Spin logic
 function spin() {
     if (isSpinning) return;
+
     playSound(soundSpin);
+
     messageEl.textContent = "";
     messageEl.className = "message";
 
@@ -118,7 +121,6 @@ function spin() {
     spinBtn.disabled = true;
     spinBtn.textContent = "SPINNING";
 
-    // Apply reel animation class (staggered)
     reelEls.forEach((reel, idx) => {
         reel.classList.add("spinning");
         setTimeout(() => {
@@ -126,7 +128,6 @@ function spin() {
         }, 350 + idx * 140);
     });
 
-    // Finish spin and determine outcome
     setTimeout(() => {
         const resultSymbols = reelEls.map((reel) => {
             const symbol = randomSymbol();
@@ -134,25 +135,33 @@ function spin() {
             return symbol;
         });
 
+        const winAmount = evaluateWin(resultSymbols, betAmount);
+
         if (winAmount > 0) {
-    credits += winAmount;
-    updateCreditsDisplay();
+            credits += winAmount;
+            updateCreditsDisplay();
 
-    lastWin = winAmount;
-    updateLastWinDisplay();
+            lastWin = winAmount;
+            updateLastWinDisplay();
 
-    messageEl.textContent = `WIN +${winAmount} credits`;
-    messageEl.classList.add("win");
-    triggerWinFlicker();
-    playSound(soundWin);
-} else {
-    lastWin = -betAmount;
-    updateLastWinDisplay();
+            messageEl.textContent = `WIN +${winAmount} credits`;
+            messageEl.classList.add("win");
+            triggerWinFlicker();
+            playSound(soundWin);
+        } else {
+            lastWin = -betAmount;
+            updateLastWinDisplay();
 
-    messageEl.textContent = "No win. Try again.";
-    messageEl.classList.add("lose");
-            
-        
+            messageEl.textContent = "No win. Try again.";
+            messageEl.classList.add("lose");
+        }
+
+        isSpinning = false;
+        spinBtn.disabled = false;
+        spinBtn.textContent = "SPIN";
+    }, 650);
+}
+
 function evaluateWin(symbols, bet) {
     const [a, b, c] = symbols;
     if (a.key === b.key && b.key === c.key) {
@@ -168,8 +177,8 @@ addCreditsBtn.addEventListener("click", () => {
     playSound(soundClick);
 
     const boost = 500;
-    ...
-});
+    credits += boost;
+    updateCreditsDisplay();
 
     lastWin = boost;
     updateLastWinDisplay();
@@ -178,15 +187,14 @@ addCreditsBtn.addEventListener("click", () => {
     messageEl.className = "message win";
 });
 
-    resetCreditsBtn.addEventListener("click", () => {
+resetCreditsBtn.addEventListener("click", () => {
     playSound(soundClick);
+
     const confirmReset = window.confirm(
         "Reset your BUNKER Casino progress? This will set credits back to 500 and clear history."
     );
     if (!confirmReset) return;
 
-    ...
-});
     credits = 500;
     lastWin = 0;
     localStorage.removeItem("bunker_slots_credits");
@@ -198,13 +206,11 @@ addCreditsBtn.addEventListener("click", () => {
 });
 
 betDecreaseBtn.addEventListener("click", () => {
-    playSound(soundClick);
     betAmount = Math.max(MIN_BET, betAmount - 5);
     updateBetDisplay();
 });
 
 betIncreaseBtn.addEventListener("click", () => {
-    playSound(soundClick);
     betAmount = Math.min(MAX_BET, betAmount + 5);
     updateBetDisplay();
 });
