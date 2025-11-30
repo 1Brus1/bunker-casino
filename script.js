@@ -1,5 +1,8 @@
 // Symbol configuration
 // Each symbol has a key, image path, and payout multiplier for a triple.
+const lastWinEl = document.getElementById("last-win");
+const resetCreditsBtn = document.getElementById("reset-credits-btn");
+
 const SYMBOLS = [
     {
         key: "seven",
@@ -54,6 +57,7 @@ const YEAR_EL = document.getElementById("year");
 // State
 let credits = 0;
 let betAmount = 10;
+let lastWin = 0;
 const MIN_BET = 5;
 const MAX_BET = 100;
 
@@ -76,6 +80,22 @@ function updateCreditsDisplay() {
 
 function updateBetDisplay() {
     betAmountEl.textContent = betAmount;
+}
+
+updateLastWinDisplay();
+
+function updateLastWinDisplay() {
+    if (!lastWinEl) return;
+
+    // Show + or – sign
+    const sign = lastWin > 0 ? "+" : lastWin < 0 ? "−" : "";
+    const absValue = Math.abs(lastWin);
+
+    if (lastWin === 0) {
+        lastWinEl.textContent = "0";
+    } else {
+        lastWinEl.textContent = `${sign}${absValue}`;
+    }
 }
 
 function randomSymbol() {
@@ -134,16 +154,24 @@ function spin() {
 
         const winAmount = evaluateWin(resultSymbols, betAmount);
 
-        if (winAmount > 0) {
-            credits += winAmount;
-            updateCreditsDisplay();
-            messageEl.textContent = `WIN +${winAmount} credits`;
-            messageEl.classList.add("win");
-            triggerWinFlicker();
-        } else {
-            messageEl.textContent = "No win. Try again.";
-            messageEl.classList.add("lose");
-        }
+if (winAmount > 0) {
+    credits += winAmount;
+    updateCreditsDisplay();
+
+    lastWin = winAmount;
+    updateLastWinDisplay();
+
+    messageEl.textContent = `WIN +${winAmount} credits`;
+    messageEl.classList.add("win");
+    triggerWinFlicker();
+} else {
+    // Lost the bet amount
+    lastWin = -betAmount;
+    updateLastWinDisplay();
+
+    messageEl.textContent = "No win. Try again.";
+    messageEl.classList.add("lose");
+}
 
         isSpinning = false;
         spinBtn.disabled = false;
@@ -163,11 +191,32 @@ function evaluateWin(symbols, bet) {
 spinBtn.addEventListener("click", spin);
 
 addCreditsBtn.addEventListener("click", () => {
+    addCreditsBtn.addEventListener("click", () => {
     const boost = 500;
     credits += boost;
     updateCreditsDisplay();
+
+    lastWin = boost;
+    updateLastWinDisplay();
+
     messageEl.textContent = `Added +${boost} demo credits.`;
     messageEl.className = "message win";
+});
+
+    resetCreditsBtn.addEventListener("click", () => {
+    const confirmReset = window.confirm(
+    "Reset your BUNKER Casino progress? This will set credits back to 500 and clear history."
+    );
+    if (!confirmReset) return;
+
+    credits = 500;
+    lastWin = 0;
+    localStorage.removeItem("bunker_slots_credits");
+    updateCreditsDisplay();
+    updateLastWinDisplay();
+
+    messageEl.textContent = "Progress reset. Back to 500 credits.";
+    messageEl.className = "message";
 });
 
 betDecreaseBtn.addEventListener("click", () => {
