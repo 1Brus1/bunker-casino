@@ -103,7 +103,7 @@ main {
     align-items: center;
     justify-content: center;
     font-weight: 700;
-    font-size: 16px;
+    font-size: 20px;
     color: #020308;
 }
 
@@ -116,13 +116,13 @@ main {
 .logo-title {
     font-weight: 700;
     letter-spacing: 0.16em;
-    font-size: 13px;
+    font-size: 20px;
     text-transform: uppercase;
     color: var(--text);
 }
 
 .logo-subtitle {
-    font-size: 10px;
+    font-size: 15px;
     text-transform: uppercase;
     letter-spacing: 0.18em;
     color: var(--muted);
@@ -333,19 +333,19 @@ main {
 .hero-title {
     font-size: clamp(17px, 3.2vw, 30px);
     line-height: 1.15;
-    margin-bottom: 10px;
+    margin-bottom: 7px;
 }
 
 .hero-title span {
     color: var(--accent);
-    text-shadow: 0 0 3px rgba(57, 255, 20, 0.25);
+    text-shadow: 0 0 6px rgba(57, 255, 20, 0);
 }
 
 .hero-subtitle {
     color: var(--muted);
     max-width: 480px;
     margin-bottom: 24px;
-    font-size: 15px;
+    font-size: 12px;
 }
 
 .hero-actions {
