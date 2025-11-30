@@ -647,9 +647,12 @@ main {
 /* Responsive */
 
 @media (max-width: 720px) {
-    main {
-        padding-top: 80px;
+    .reel {
+        width: 70px;
+        height: 70px;
+        background-size: 60%;
     }
+}
 
     .slots-card {
         padding: 16px 12px 16px;
