@@ -545,3 +545,19 @@ reelEls.forEach((reel) => {
     const symbol = randomSymbol();
     setReelSymbol(reel, symbol);
 });
+
+
+.stats-session {
+    margin-top: 8px;
+    font-size: 12px;
+    color: var(--muted);
+}
+
+.stats-session-positive {
+    color: var(--accent);
+    text-shadow: 0 0 6px rgba(57, 255, 20, 0.6);
+}
+
+.stats-session-negative {
+    color: var(--danger);
+}
