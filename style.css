@@ -893,3 +893,41 @@ main {
         text-align: left;
     }
     }
+
+
+/* PLAYER STATS */
+
+.stats-section {
+    margin-top: 32px;
+}
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 12px;
+}
+
+.stat-card {
+    background: rgba(10, 12, 22, 0.9);
+    border-radius: 14px;
+    padding: 10px 14px;
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    box-shadow: 0 16px 30px rgba(0, 0, 0, 0.7);
+}
+
+.stat-label {
+    display: block;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.16em;
+    color: var(--muted);
+    margin-bottom: 4px;
+}
+
+.stat-value {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--accent);
+    text-shadow: 0 0 8px rgba(57, 255, 20, 0.7);
+}
+
