@@ -20,6 +20,7 @@ const betAmountEl      = document.getElementById("bet-amount");
 const betDecreaseBtn   = document.getElementById("bet-decrease");
 const betIncreaseBtn   = document.getElementById("bet-increase");
 const lastWinEl        = document.getElementById("last-win");
+const statSessionNetEl = document.getElementById("stat-session-net");
 
 const reelEls = [
     document.getElementById("reel1"),
