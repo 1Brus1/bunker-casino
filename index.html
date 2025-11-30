@@ -4,21 +4,21 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-    <title>BUNKER Casino · Neon demo slots (no real money)</title>
+    <title>BUNKER Casino · Neon demo games (no real money)</title>
     <meta name="description"
-          content="BUNKER Casino is a neon-soaked, credit-only demo casino. Play fake-money slots in your browser. No signup, no deposits, pure vibes." />
+          content="BUNKER Casino is a neon-soaked, credit-only demo casino. Play fake-money slots and blackjack in your browser. No signup, no deposits." />
 
     <!-- Open Graph / social share -->
-    <meta property="og:title" content="BUNKER Casino · Neon demo slots" />
+    <meta property="og:title" content="BUNKER Casino · Neon demo games" />
     <meta property="og:description"
-          content="Play BUNKER Neon Slots with demo credits only. No real money, no signup." />
+          content="Play BUNKER Neon Slots and Blackjack with demo credits only. No real money, no signup." />
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://1brus1.github.io/bunker-casino/" />
     <meta property="og:image" content="https://1brus1.github.io/bunker-casino/bunker-banner.png" />
 
     <!-- Twitter card -->
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="BUNKER Casino · Neon demo slots" />
+    <meta name="twitter:title" content="BUNKER Casino · Neon demo games" />
     <meta name="twitter:description"
           content="Neon-soaked, credit-only casino in your browser." />
     <meta name="twitter:image" content="https://1brus1.github.io/bunker-casino/bunker-banner.png" />
@@ -44,6 +44,7 @@
         <nav class="nav">
             <a href="#home">Home</a>
             <a href="#slots">Slots</a>
+            <a href="#blackjack">Blackjack</a>
         </nav>
     </header>
 
@@ -51,7 +52,7 @@
         <!-- HOME / HERO -->
         <section id="home" class="hero">
             <div class="hero-content">
-                <h1 class="hero-title">WELCOME TO <span>BUNKER</span> CASINO</h1>
+                <h1 class="hero-title">Welcome to <span>BUNKER</span> CASINO</h1>
                 <p class="hero-subtitle">
                     Neon-soaked, credit-only casino. No real money. Pure vibes.
                 </p>
@@ -96,10 +97,16 @@
                     <a href="#slots" class="primary-btn small">Play now</a>
                 </article>
 
-                <article class="game-card disabled">
-                    <div class="game-tag">Coming soon</div>
+                <article class="game-card">
+                    <div class="game-tag">New</div>
                     <h3>BUNKER Blackjack</h3>
-                    <p>Sleek blackjack table UI with instant plays and crisp animations.</p>
+                    <p>Sleek blackjack table with demo credits. Hit, stand, and beat the dealer.</p>
+                    <ul class="game-meta">
+                        <li>Single hand</li>
+                        <li>Uses same credits</li>
+                        <li>Simple rules</li>
+                    </ul>
+                    <a href="#blackjack" class="primary-btn small">Play now</a>
                 </article>
 
                 <article class="game-card disabled">
@@ -181,6 +188,55 @@
                         </div>
                     </div>
                     <div class="message" id="message"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- BLACKJACK SECTION -->
+        <section id="blackjack" class="blackjack-section">
+            <div class="blackjack-card neon-border">
+                <div class="blackjack-header">
+                    <div>
+                        <h2 class="blackjack-title">BUNKER Blackjack</h2>
+                        <p class="blackjack-subtitle">Standard rules, demo credits, single hand vs dealer.</p>
+                    </div>
+                    <div class="blackjack-credits">
+                        <span>Credits</span>
+                        <strong id="bj-credits-mirror">0</strong>
+                    </div>
+                </div>
+
+                <div class="blackjack-body">
+                    <div class="blackjack-table">
+                        <div class="bj-row">
+                            <div class="bj-label">Dealer</div>
+                            <div class="bj-hand" id="bj-dealer-hand"></div>
+                            <div class="bj-score" id="bj-dealer-score"></div>
+                        </div>
+                        <div class="bj-row">
+                            <div class="bj-label">Player</div>
+                            <div class="bj-hand" id="bj-player-hand"></div>
+                            <div class="bj-score" id="bj-player-score"></div>
+                        </div>
+                    </div>
+
+                    <div class="blackjack-controls">
+                        <div class="bet-control">
+                            <span>Bet per hand</span>
+                            <div class="bet-input">
+                                <button id="bj-bet-decrease">-</button>
+                                <span id="bj-bet-amount">10</span>
+                                <button id="bj-bet-increase">+</button>
+                            </div>
+                        </div>
+                        <div class="bj-buttons">
+                            <button id="bj-deal-btn" class="secondary-btn">Deal</button>
+                            <button id="bj-hit-btn" class="secondary-btn" disabled>Hit</button>
+                            <button id="bj-stand-btn" class="primary-btn small" disabled>Stand</button>
+                        </div>
+                    </div>
+
+                    <div class="bj-message" id="bj-message"></div>
                 </div>
             </div>
         </section>
