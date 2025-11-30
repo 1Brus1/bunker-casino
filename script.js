@@ -55,6 +55,17 @@ let lastWin   = 0;
 const MIN_BET = 5;
 const MAX_BET = 100;
 let isSpinning = false;
+let stats = {
+    totalSpins: 0,
+    totalBjHands: 0,
+    totalBjWins: 0,
+    biggestWin: 0 // in credits
+};
+
+let sessionStartCredits = 0;
+
+
+
 
 // Blackjack state
 let bjBetAmount  = 10;
@@ -75,6 +86,24 @@ function loadCredits() {
     updateCreditsDisplay();
 }
 
+function updateSessionNetDisplay() {
+    if (!statSessionNetEl) return;
+    const net = credits - sessionStartCredits;
+
+    statSessionNetEl.textContent = net;
+
+    statSessionNetEl.classList.remove(
+        "stats-session-positive",
+        "stats-session-negative"
+    );
+
+    if (net > 0) {
+        statSessionNetEl.classList.add("stats-session-positive");
+    } else if (net < 0) {
+        statSessionNetEl.classList.add("stats-session-negative");
+    }
+}
+
 function updateCreditsDisplay() {
     creditsEl.textContent = credits;
     creditsHeroEl.textContent = credits;
@@ -82,6 +111,7 @@ function updateCreditsDisplay() {
         bjCreditsMirror.textContent = credits;
     }
     localStorage.setItem("bunker_slots_credits", credits);
+    updateSessionNetDisplay();
 }
 
 function updateBetDisplay() {
@@ -419,19 +449,26 @@ resetCreditsBtn.addEventListener("click", () => {
     playSound(soundClick);
 
     const confirmReset = window.confirm(
-        "Reset your BUNKER Casino progress? This will set credits back to 500 and clear history."
+        "Reset your BUNKER Casino progress? This will set credits back to 500 and clear history (including stats)."
     );
     if (!confirmReset) return;
 
     credits = 500;
     lastWin = 0;
+    stats = { totalSpins: 0, totalBjHands: 0, totalBjWins: 0, biggestWin: 0 };
     localStorage.removeItem("bunker_slots_credits");
+    localStorage.removeItem("bunker_stats_v1");
+
+    sessionStartCredits = credits;  // new baseline
     updateCreditsDisplay();
     updateLastWinDisplay();
+    updateStatsDisplay();
+    updateSessionNetDisplay();
 
     messageEl.textContent = "Progress reset. Back to 500 credits.";
     messageEl.className = "message";
 });
+
 
 betDecreaseBtn.addEventListener("click", () => {
     betAmount = Math.max(MIN_BET, betAmount - 5);
@@ -464,10 +501,14 @@ if (YEAR_EL) {
 }
 
 // Initial render
+// Initial render
 loadCredits();
+sessionStartCredits = credits;   // capture starting credits for this session
+loadStats();
 updateBetDisplay();
 updateLastWinDisplay();
 bjBetAmountEl.textContent = bjBetAmount;
+updateSessionNetDisplay();
 reelEls.forEach((reel) => {
     const symbol = randomSymbol();
     setReelSymbol(reel, symbol);
