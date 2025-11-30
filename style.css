@@ -183,9 +183,9 @@ main {
 }
 
 .hero-title {
-    font-size: clamp(32px, 4vw, 44px);
-    line-height: 1.1;
-    margin-bottom: 12px;
+    font-size: clamp(26px, 3.2vw, 3.4px);
+    line-height: 1.15;
+    margin-bottom: 10px;
 }
 
 .hero-title span {
