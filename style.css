@@ -1,551 +1,403 @@
-// Symbol configuration
-const SYMBOLS = [
-    { key: "seven",   image: "symbol-seven.png",   multiplier: 50 },
-    { key: "star",    image: "symbol-star.png",    multiplier: 25 },
-    { key: "cherry",  image: "symbol-cherry.png",  multiplier: 10 },
-    { key: "bar",     image: "symbol-bar.png",     multiplier: 5  },
-    { key: "diamond", image: "symbol-diamond.png", multiplier: 5  },
-    { key: "lemon",   image: "symbol-lemon.png",   multiplier: 5  }
-];
+:root {
+    --bg: #020308;
+    --bg-alt: #050712;
+    --accent: #39ff14;
+    --accent-soft: rgba(57, 255, 20, 0.4);
+    --text: #f5f5f5;
+    --muted: #8a8a94;
+    --danger: #ff3860;
+    --card: rgba(15, 18, 30, 0.9);
+}
 
-// DOM elements
-const creditsEl        = document.getElementById("credits");
-const creditsHeroEl    = document.getElementById("credits-hero");
-const bjCreditsMirror  = document.getElementById("bj-credits-mirror");
-const messageEl        = document.getElementById("message");
-const spinBtn          = document.getElementById("spin-btn");
-const addCreditsBtn    = document.getElementById("add-credits-btn");
-const resetCreditsBtn  = document.getElementById("reset-credits-btn");
-const betAmountEl      = document.getElementById("bet-amount");
-const betDecreaseBtn   = document.getElementById("bet-decrease");
-const betIncreaseBtn   = document.getElementById("bet-increase");
-const lastWinEl        = document.getElementById("last-win");
+/* Base */
 
-const reelEls = [
-    document.getElementById("reel1"),
-    document.getElementById("reel2"),
-    document.getElementById("reel3")
-];
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
 
-const YEAR_EL = document.getElementById("year");
+html,
+body {
+    margin: 0;
+    padding: 0;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text",
+        Arial, sans-serif;
+    color: var(--text);
+    background: radial-gradient(circle at top, #101321 0, #020308 55%);
+    min-height: 100%;
+}
 
-// Blackjack DOM
-const bjDealerHandEl   = document.getElementById("bj-dealer-hand");
-const bjPlayerHandEl   = document.getElementById("bj-player-hand");
-const bjDealerScoreEl  = document.getElementById("bj-dealer-score");
-const bjPlayerScoreEl  = document.getElementById("bj-player-score");
-const bjMessageEl      = document.getElementById("bj-message");
-const bjBetAmountEl    = document.getElementById("bj-bet-amount");
-const bjBetDecreaseBtn = document.getElementById("bj-bet-decrease");
-const bjBetIncreaseBtn = document.getElementById("bj-bet-increase");
-const bjDealBtn        = document.getElementById("bj-deal-btn");
-const bjHitBtn         = document.getElementById("bj-hit-btn");
-const bjStandBtn       = document.getElementById("bj-stand-btn");
+body {
+    position: relative;
+    overflow-x: hidden;
+}
 
-// Stats DOM
-const statTotalSpinsEl     = document.getElementById("stat-total-spins");
-const statTotalBjHandsEl   = document.getElementById("stat-total-bj-hands");
-const statTotalBjWinsEl    = document.getElementById("stat-total-bj-wins");
-const statBiggestWinEl     = document.getElementById("stat-biggest-win");
+/* Subtle animated background overlay */
 
-// Audio elements
-const soundSpin  = document.getElementById("sound-spin");
-const soundWin   = document.getElementById("sound-win");
-const soundClick = document.getElementById("sound-click");
+.bg-overlay {
+    position: fixed;
+    inset: 0;
+    background:
+        radial-gradient(circle at 20% -10%, rgba(57, 255, 20, 0.14), transparent 55%),
+        radial-gradient(circle at 90% 110%, rgba(57, 255, 20, 0.12), transparent 55%);
+    mix-blend-mode: screen;
+    opacity: 0.8;
+    pointer-events: none;
+    z-index: -1;
+    animation: bgPulse 10s ease-in-out infinite alternate;
+}
 
-// State (shared credits)
-let credits   = 0;
-let betAmount = 10;
-let lastWin   = 0;
-const MIN_BET = 5;
-const MAX_BET = 100;
-let isSpinning = false;
-
-// Blackjack state
-let bjBetAmount  = 10;
-let bjDeck       = [];
-let bjPlayerHand = [];
-let bjDealerHand = [];
-let bjInRound    = false;
-let bjCurrentBet = 0;
-
-// Stats state
-let stats = {
-    totalSpins: 0,
-    totalBjHands: 0,
-    totalBjWins: 0,
-    biggestWin: 0 // in credits
-};
-
-// Helpers: credits & stats
-function loadCredits() {
-    const stored = localStorage.getItem("bunker_slots_credits");
-    if (stored) {
-        credits = parseInt(stored, 10) || 0;
-    } else {
-        credits = 500;
+@keyframes bgPulse {
+    0% {
+        transform: translate3d(0, 0, 0);
+        opacity: 0.7;
     }
-    updateCreditsDisplay();
-}
-
-function updateCreditsDisplay() {
-    creditsEl.textContent = credits;
-    creditsHeroEl.textContent = credits;
-    if (bjCreditsMirror) {
-        bjCreditsMirror.textContent = credits;
-    }
-    localStorage.setItem("bunker_slots_credits", credits);
-}
-
-function loadStats() {
-    const stored = localStorage.getItem("bunker_stats_v1");
-    if (stored) {
-        try {
-            const parsed = JSON.parse(stored);
-            stats = {
-                totalSpins: parsed.totalSpins || 0,
-                totalBjHands: parsed.totalBjHands || 0,
-                totalBjWins: parsed.totalBjWins || 0,
-                biggestWin: parsed.biggestWin || 0
-            };
-        } catch (e) {
-            stats = { totalSpins: 0, totalBjHands: 0, totalBjWins: 0, biggestWin: 0 };
-        }
-    }
-    updateStatsDisplay();
-}
-
-function saveStats() {
-    localStorage.setItem("bunker_stats_v1", JSON.stringify(stats));
-}
-
-function updateStatsDisplay() {
-    if (statTotalSpinsEl)   statTotalSpinsEl.textContent   = stats.totalSpins;
-    if (statTotalBjHandsEl) statTotalBjHandsEl.textContent = stats.totalBjHands;
-    if (statTotalBjWinsEl)  statTotalBjWinsEl.textContent  = stats.totalBjWins;
-    if (statBiggestWinEl)   statBiggestWinEl.textContent   = stats.biggestWin;
-}
-
-function bumpBiggestWin(winAmount) {
-    if (winAmount > stats.biggestWin) {
-        stats.biggestWin = winAmount;
+    100% {
+        transform: translate3d(-10px, 10px, 0);
+        opacity: 1;
     }
 }
 
-function updateBetDisplay() {
-    betAmountEl.textContent = betAmount;
+/* Layout */
+
+main {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 96px 20px 60px;
 }
 
-function updateLastWinDisplay() {
-    if (!lastWinEl) return;
+/* Header */
 
-    const sign = lastWin > 0 ? "+" : lastWin < 0 ? "−" : "";
-    const absValue = Math.abs(lastWin);
-
-    if (lastWin === 0) {
-        lastWinEl.textContent = "0";
-    } else {
-        lastWinEl.textContent = `${sign}${absValue}`;
-    }
+.site-header {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 14px 20px;
+    background: linear-gradient(to bottom, rgba(0, 0, 0, 0.9), rgba(0, 0, 0, 0));
+    backdrop-filter: blur(20px);
 }
 
-// Slots helpers
-function randomSymbol() {
-    const index = Math.floor(Math.random() * SYMBOLS.length);
-    return SYMBOLS[index];
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    text-decoration: none;
 }
 
-function setReelSymbol(reelEl, symbol) {
-    reelEl.dataset.symbol = symbol.key;
-    reelEl.style.backgroundImage = `url(${symbol.image})`;
-}
-
-function triggerWinFlicker() {
-    // hook for future FX
-}
-
-function playSound(audioEl) {
-    if (!audioEl) return;
-    try {
-        audioEl.currentTime = 0;
-        audioEl.play();
-    } catch (e) {
-        // ignore autoplay errors
-    }
-}
-
-// SLOTS: spin logic
-function spin() {
-    if (isSpinning) return;
-
-    playSound(soundSpin);
-
-    messageEl.textContent = "";
-    messageEl.className = "message";
-
-    if (credits < betAmount) {
-        messageEl.textContent = "Not enough credits. Add more demo credits.";
-        messageEl.classList.add("error");
-        return;
-    }
-
-    credits -= betAmount;
-    updateCreditsDisplay();
-
-    isSpinning = true;
-    spinBtn.disabled = true;
-    spinBtn.textContent = "SPINNING";
-
-    reelEls.forEach((reel, idx) => {
-        reel.classList.add("spinning");
-        setTimeout(() => {
-            reel.classList.remove("spinning");
-        }, 350 + idx * 140);
-    });
-
-    setTimeout(() => {
-        const resultSymbols = reelEls.map((reel) => {
-            const symbol = randomSymbol();
-            setReelSymbol(reel, symbol);
-            return symbol;
-        });
-
-        const winAmount = evaluateWin(resultSymbols, betAmount);
-
-        // Stats: every spin counts
-        stats.totalSpins += 1;
-
-        if (winAmount > 0) {
-            credits += winAmount;
-            updateCreditsDisplay();
-
-            lastWin = winAmount;
-            bumpBiggestWin(winAmount);
-            updateLastWinDisplay();
-
-            messageEl.textContent = `WIN +${winAmount} credits`;
-            messageEl.classList.add("win");
-            triggerWinFlicker();
-            playSound(soundWin);
-        } else {
-            lastWin = -betAmount;
-            updateLastWinDisplay();
-
-            messageEl.textContent = "No win. Try again.";
-            messageEl.classList.add("lose");
-        }
-
-        saveStats();
-        updateStatsDisplay();
-
-        isSpinning = false;
-        spinBtn.disabled = false;
-        spinBtn.textContent = "SPIN";
-    }, 650);
-}
-
-function evaluateWin(symbols, bet) {
-    const [a, b, c] = symbols;
-    if (a.key === b.key && b.key === c.key) {
-        return bet * a.multiplier;
-    }
-    return 0;
-}
-
-// BLACKJACK: deck + scoring
-function createDeck() {
-    const suits = ["♠", "♥", "♦", "♣"];
-    const ranks = ["A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"];
-    const deck = [];
-    for (let s of suits) {
-        for (let r of ranks) {
-            deck.push({ rank: r, suit: s });
-        }
-    }
-    // shuffle
-    for (let i = deck.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [deck[i], deck[j]] = [deck[j], deck[i]];
-    }
-    return deck;
-}
-
-function cardValue(card) {
-    if (card.rank === "A") return 11;
-    if (["J", "Q", "K"].includes(card.rank)) return 10;
-    return parseInt(card.rank, 10);
-}
-
-function handValue(hand) {
-    let total = 0;
-    let aces = 0;
-    for (let card of hand) {
-        total += cardValue(card);
-        if (card.rank === "A") aces++;
-    }
-    while (total > 21 && aces > 0) {
-        total -= 10;
-        aces--;
-    }
-    return total;
-}
-
-function renderHand(hand, containerEl, hideFirstCard) {
-    containerEl.innerHTML = "";
-    hand.forEach((card, index) => {
-        const cardDiv = document.createElement("div");
-        cardDiv.classList.add("bj-card");
-        const isRed = card.suit === "♥" || card.suit === "♦";
-        if (isRed) cardDiv.classList.add("red");
-
-        if (hideFirstCard && index === 0) {
-            cardDiv.classList.add("hidden");
-            cardDiv.textContent = "??";
-        } else {
-            cardDiv.textContent = card.rank + card.suit;
-        }
-        containerEl.appendChild(cardDiv);
-    });
-}
-
-function resetBlackjackUI() {
-    bjDealerHandEl.innerHTML = "";
-    bjPlayerHandEl.innerHTML = "";
-    bjDealerScoreEl.textContent = "";
-    bjPlayerScoreEl.textContent = "";
-    bjMessageEl.textContent = "";
-    bjMessageEl.className = "bj-message";
-}
-
-// BLACKJACK: round flow
-function startBlackjackRound() {
-    if (bjInRound) return;
-
-    playSound(soundClick);
-    resetBlackjackUI();
-
-    if (credits < bjBetAmount) {
-        bjMessageEl.textContent = "Not enough credits for this bet.";
-        bjMessageEl.classList.add("lose");
-        return;
-    }
-
-    credits -= bjBetAmount;
-    bjCurrentBet = bjBetAmount;
-    updateCreditsDisplay();
-
-    bjDeck = createDeck();
-    bjPlayerHand = [];
-    bjDealerHand = [];
-    bjInRound = true;
-
-    // initial deal
-    bjPlayerHand.push(bjDeck.pop());
-    bjDealerHand.push(bjDeck.pop());
-    bjPlayerHand.push(bjDeck.pop());
-    bjDealerHand.push(bjDeck.pop());
-
-    const playerVal = handValue(bjPlayerHand);
-
-    renderHand(bjDealerHand, bjDealerHandEl, true);
-    renderHand(bjPlayerHand, bjPlayerHandEl, false);
-    bjPlayerScoreEl.textContent = playerVal;
-    bjDealerScoreEl.textContent = "";
-
-    bjDealBtn.disabled = true;
-    bjHitBtn.disabled = false;
-    bjStandBtn.disabled = false;
-
-    if (playerVal === 21) {
-        finishBlackjackRound(true, false);
-    }
-}
-
-function hitBlackjack() {
-    if (!bjInRound) return;
-
-    playSound(soundClick);
-
-    bjPlayerHand.push(bjDeck.pop());
-    const playerVal = handValue(bjPlayerHand);
-
-    renderHand(bjDealerHand, bjDealerHandEl, true);
-    renderHand(bjPlayerHand, bjPlayerHandEl, false);
-    bjPlayerScoreEl.textContent = playerVal;
-
-    if (playerVal > 21) {
-        finishBlackjackRound(false, true); // busted
-    }
-}
-
-function standBlackjack() {
-    if (!bjInRound) return;
-
-    playSound(soundClick);
-
-    // Dealer reveals and draws to 17+
-    renderHand(bjDealerHand, bjDealerHandEl, false);
-    let dealerVal = handValue(bjDealerHand);
-    while (dealerVal < 17) {
-        bjDealerHand.push(bjDeck.pop());
-        dealerVal = handValue(bjDealerHand);
-    }
-    renderHand(bjDealerHand, bjDealerHandEl, false);
-    bjDealerScoreEl.textContent = dealerVal;
-
-    finishBlackjackRound(false, false);
-}
-
-function finishBlackjackRound(fromBlackjack, playerBusted) {
-    const playerVal = handValue(bjPlayerHand);
-    const dealerVal = handValue(bjDealerHand);
-
-    renderHand(bjDealerHand, bjDealerHandEl, false);
-    bjDealerScoreEl.textContent = dealerVal;
-    bjPlayerScoreEl.textContent = playerVal;
-
-    let outcome = "";
-    let payout = 0;
-
-    if (playerBusted) {
-        outcome = "lose";
-        payout = 0;
-    } else if (fromBlackjack && playerVal === 21) {
-        payout = Math.round(bjCurrentBet * 2.5); // blackjack payout
-        outcome = "blackjack";
-    } else if (dealerVal > 21) {
-        payout = bjCurrentBet * 2;
-        outcome = "win";
-    } else if (playerVal > dealerVal) {
-        payout = bjCurrentBet * 2;
-        outcome = "win";
-    } else if (playerVal < dealerVal) {
-        payout = 0;
-        outcome = "lose";
-    } else {
-        payout = bjCurrentBet;
-        outcome = "push";
-    }
-
-    // Stats: every finished round counts as a blackjack hand
-    stats.totalBjHands += 1;
-
-    if (payout > 0) {
-        // net win = payout - bet (for stats / biggest win)
-        const netWin = payout - bjCurrentBet;
-        if (outcome === "blackjack" || outcome === "win") {
-            stats.totalBjWins += 1;
-            bumpBiggestWin(netWin > 0 ? netWin : payout);
-        }
-
-        credits += payout;
-        updateCreditsDisplay();
-    }
-
-    if (outcome === "blackjack" || outcome === "win") {
-        bjMessageEl.textContent =
-            outcome === "blackjack"
-                ? `Blackjack! Payout +${payout} credits`
-                : `You win! Payout +${payout} credits`;
-        bjMessageEl.classList.add("win");
-        playSound(soundWin);
-    } else if (outcome === "push") {
-        bjMessageEl.textContent = "Push. Bet returned.";
-        bjMessageEl.classList.add("push");
-    } else {
-        bjMessageEl.textContent = "Dealer wins.";
-        bjMessageEl.classList.add("lose");
-    }
-
-    saveStats();
-    updateStatsDisplay();
-
-    bjInRound = false;
-    bjDealBtn.disabled = false;
-    bjHitBtn.disabled = true;
-    bjStandBtn.disabled = true;
-}
-
-// Events – Slots
-spinBtn.addEventListener("click", spin);
-
-addCreditsBtn.addEventListener("click", () => {
-    playSound(soundClick);
-
-    const boost = 500;
-    credits += boost;
-    updateCreditsDisplay();
-
-    lastWin = boost;
-    updateLastWinDisplay();
-
-    messageEl.textContent = `Added +${boost} demo credits.`;
-    messageEl.className = "message win";
-});
-
-resetCreditsBtn.addEventListener("click", () => {
-    playSound(soundClick);
-
-    const confirmReset = window.confirm(
-        "Reset your BUNKER Casino progress? This will set credits back to 500 and clear history (including stats)."
+.logo-mark {
+    width: 28px;
+    height: 28px;
+    border-radius: 999px;
+    background: radial-gradient(
+        circle at 30% 20%,
+        rgba(57, 255, 20, 0.9),
+        rgba(57, 255, 20, 0.15)
     );
-    if (!confirmReset) return;
-
-    credits = 500;
-    lastWin = 0;
-    stats = { totalSpins: 0, totalBjHands: 0, totalBjWins: 0, biggestWin: 0 };
-    localStorage.removeItem("bunker_slots_credits");
-    localStorage.removeItem("bunker_stats_v1");
-
-    updateCreditsDisplay();
-    updateLastWinDisplay();
-    updateStatsDisplay();
-
-    messageEl.textContent = "Progress reset. Back to 500 credits.";
-    messageEl.className = "message";
-});
-
-betDecreaseBtn.addEventListener("click", () => {
-    betAmount = Math.max(MIN_BET, betAmount - 5);
-    updateBetDisplay();
-});
-
-betIncreaseBtn.addEventListener("click", () => {
-    betAmount = Math.min(MAX_BET, betAmount + 5);
-    updateBetDisplay();
-});
-
-// Events – Blackjack
-bjBetDecreaseBtn.addEventListener("click", () => {
-    bjBetAmount = Math.max(MIN_BET, bjBetAmount - 5);
-    bjBetAmountEl.textContent = bjBetAmount;
-});
-
-bjBetIncreaseBtn.addEventListener("click", () => {
-    bjBetAmount = Math.min(MAX_BET, bjBetAmount + 5);
-    bjBetAmountEl.textContent = bjBetAmount;
-});
-
-bjDealBtn.addEventListener("click", startBlackjackRound);
-bjHitBtn.addEventListener("click", hitBlackjack);
-bjStandBtn.addEventListener("click", standBlackjack);
-
-// Footer year
-if (YEAR_EL) {
-    YEAR_EL.textContent = new Date().getFullYear();
+    border: 1px solid rgba(57, 255, 20, 0.8);
+    box-shadow: 0 0 12px rgba(57, 255, 20, 0.8);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 16px;
+    color: #020308;
 }
 
-// Initial render
-loadCredits();
-loadStats();
-updateBetDisplay();
-updateLastWinDisplay();
-bjBetAmountEl.textContent = bjBetAmount;
-reelEls.forEach((reel) => {
-    const symbol = randomSymbol();
-    setReelSymbol(reel, symbol);
-});
+.logo-text {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.1;
+}
 
+.logo-title {
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    font-size: 13px;
+    text-transform: uppercase;
+    color: var(--text);
+}
+
+.logo-subtitle {
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    color: var(--muted);
+}
+
+.nav a {
+    margin-left: 18px;
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: var(--muted);
+    text-decoration: none;
+    position: relative;
+}
+
+.nav a::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: -4px;
+    width: 0;
+    height: 2px;
+    background: var(--accent);
+    box-shadow: 0 0 12px var(--accent);
+    transition: width 0.2s ease;
+}
+
+.nav a:hover {
+    color: var(--text);
+}
+
+.nav a:hover::after {
+    width: 100%;
+}
+
+/* Hero */
+
+.hero {
+    padding: 40px 0 10px;
+}
+
+.hero-content {
+    max-width: 620px;
+}
+
+.hero-title {
+    font-size: clamp(26px, 3.2vw, 34px);
+    line-height: 1.15;
+    margin-bottom: 10px;
+}
+
+.hero-title span {
+    color: var(--accent);
+    text-shadow: 0 0 6px rgba(57, 255, 20, 0.55);
+}
+
+.hero-subtitle {
+    color: var(--muted);
+    max-width: 480px;
+    margin-bottom: 24px;
+    font-size: 15px;
+}
+
+.hero-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-bottom: 24px;
+}
+
+/* Buttons */
+
+.primary-btn,
+.secondary-btn {
+    border-radius: 999px;
+    padding: 11px 24px;
+    font-size: 14px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.16em;
+    border: 1px solid transparent;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.1s ease, box-shadow 0.1s ease, background 0.1s ease,
+        border-color 0.1s ease;
+}
+
+.primary-btn {
+    background: radial-gradient(circle at top left, rgba(57, 255, 20, 0.3), rgba(57, 255, 20, 0.8));
+    color: #020308;
+    border-color: rgba(57, 255, 20, 0.7);
+    box-shadow: 0 0 16px rgba(57, 255, 20, 0.7);
+}
+
+.primary-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 0 22px rgba(57, 255, 20, 0.9);
+}
+
+.secondary-btn {
+    background: transparent;
+    border-color: rgba(255, 255, 255, 0.1);
+    color: var(--muted);
+}
+
+.secondary-btn:hover {
+    border-color: rgba(255, 255, 255, 0.4);
+    color: var(--text);
+}
+
+.primary-btn.small {
+    padding: 8px 18px;
+    font-size: 12px;
+}
+
+.primary-btn.large {
+    padding: 13px 32px;
+}
+
+/* Hero metrics */
+
+.hero-metrics {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+.metric-card {
+    background: rgba(10, 12, 22, 0.9);
+    border-radius: 12px;
+    padding: 12px 16px;
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    min-width: 140px;
+}
+
+.metric-label {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.16em;
+    color: var(--muted);
+}
+
+.metric-value {
+    font-size: 20px;
+    font-weight: 600;
+    margin-top: 4px;
+    color: var(--accent);
+    text-shadow: 0 0 10px rgba(57, 255, 20, 0.8);
+}
+
+/* Section titles */
+
+.section-title {
+    margin-top: 24px;
+    margin-bottom: 16px;
+    font-size: 18px;
+    text-transform: uppercase;
+    letter-spacing: 0.16em;
+    color: var(--muted);
+}
+
+/* Game cards */
+
+.games-grid-section {
+    margin-top: 30px;
+}
+
+.games-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 18px;
+}
+
+.game-card {
+    position: relative;
+    padding: 18px 18px 20px;
+    border-radius: 16px;
+    background: var(--card);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    box-shadow: 0 18px 45px rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(18px);
+    overflow: hidden;
+}
+
+.game-card::before {
+    content: "";
+    position: absolute;
+    inset: -40%;
+    background: radial-gradient(circle at 0 0, rgba(57, 255, 20, 0.12), transparent 60%);
+    opacity: 0.6;
+    pointer-events: none;
+}
+
+.game-card h3 {
+    margin: 4px 0 6px;
+    font-size: 17px;
+}
+
+.game-card p {
+    margin: 0 0 10px;
+    font-size: 13px;
+    color: var(--muted);
+}
+
+.game-tag {
+    display: inline-flex;
+    align-items: center;
+    padding: 3px 9px;
+    border-radius: 999px;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    background: rgba(57, 255, 20, 0.12);
+    color: var(--accent);
+    border: 1px solid rgba(57, 255, 20, 0.5);
+}
+
+.game-meta {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 12px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px 10px;
+    font-size: 12px;
+    color: var(--muted);
+}
+
+.game-meta li::before {
+    content: "• ";
+    color: rgba(255, 255, 255, 0.3);
+}
+
+.game-card.disabled {
+    opacity: 0.6;
+}
+
+/* Player stats */
+
+.stats-section {
+    margin-top: 32px;
+}
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 12px;
+}
+
+.stat-card {
+    background: rgba(10, 12, 22, 0.9);
+    border-radius: 14px;
+    padding: 10px 14px;
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    box-shadow: 0 16px 30px rgba(0, 0, 0, 0.7);
+}
+
+.stat-label {
+    display: block;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.16em;
+    color: var(--muted);
+    margin-bottom: 4px;
+}
+
+.stat-value {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--accent);
+    text-shadow: 0 0 8px rgba(57, 255, 20, 0.7);
+}
 
 .stats-session {
     margin-top: 8px;
@@ -561,3 +413,498 @@ reelEls.forEach((reel) => {
 .stats-session-negative {
     color: var(--danger);
 }
+
+/* Slots section */
+
+.slots-section {
+    margin-top: 40px;
+}
+
+.slots-card {
+    background: var(--card);
+    border-radius: 20px;
+    padding: 20px 18px 18px;
+    box-shadow: 0 20px 45px rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    position: relative;
+    overflow: hidden;
+}
+
+.neon-border::before {
+    content: "";
+    position: absolute;
+    inset: -2px;
+    border-radius: 20px;
+    background:
+        conic-gradient(
+            from 180deg,
+            rgba(57, 255, 20, 0.4),
+            transparent,
+            rgba(57, 255, 20, 0.7),
+            transparent,
+            rgba(57, 255, 20, 0.4)
+        );
+    opacity: 0.6;
+    z-index: -1;
+    filter: blur(10px);
+    animation: neonBorder 6s linear infinite;
+}
+
+@keyframes neonBorder {
+    0%   { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.slots-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 18px;
+    margin-bottom: 16px;
+}
+
+.slots-title {
+    margin: 0 0 4px;
+    font-size: 20px;
+}
+
+.slots-subtitle {
+    margin: 0;
+    font-size: 13px;
+    color: var(--muted);
+}
+
+.slots-credits {
+    text-align: right;
+    min-width: 140px;
+}
+
+.slots-credits span {
+    display: block;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: var(--muted);
+}
+
+.slots-credits strong {
+    display: block;
+    font-size: 22px;
+    color: var(--accent);
+    text-shadow: 0 0 12px rgba(57, 255, 20, 1);
+}
+
+/* Last win chip */
+
+.last-win-chip {
+    margin-top: 6px;
+    display: inline-flex;
+    align-items: baseline;
+    gap: 4px;
+    padding: 4px 10px;
+    border-radius: 999px;
+    background: rgba(5, 10, 5, 0.85);
+    border: 1px solid rgba(57, 255, 20, 0.35);
+    box-shadow: 0 0 10px rgba(57, 255, 20, 0.35);
+}
+
+.last-win-label {
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.16em;
+    color: var(--muted);
+}
+
+.last-win-value {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--accent);
+}
+
+/* Slot machine */
+
+.slots-body {
+    padding: 14px 0;
+}
+
+.slot-machine {
+    display: flex;
+    justify-content: center;
+    gap: 14px;
+    margin-bottom: 16px;
+    padding: 12px;
+    border-radius: 14px;
+    background: linear-gradient(to bottom, rgba(255, 255, 255, 0.02), rgba(0, 0, 0, 0.4));
+}
+
+.reel-wrapper {
+    padding: 6px;
+    border-radius: 12px;
+    background: radial-gradient(circle at top, rgba(57, 255, 20, 0.08), rgba(0, 0, 0, 0.9));
+    box-shadow: inset 0 0 16px rgba(0, 0, 0, 0.8);
+}
+
+.reel {
+    width: 70px;
+    height: 70px;
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    background-color: #05070d;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 55%;
+    box-shadow:
+        0 0 12px rgba(57, 255, 20, 0.3),
+        inset 0 0 18px rgba(0, 0, 0, 0.9);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.reel.spinning {
+    animation: reelSpin 0.6s ease-in-out;
+    filter: blur(1px) brightness(1.15);
+}
+
+@keyframes reelSpin {
+    0%   { transform: translateY(0px); }
+    50%  { transform: translateY(18px); }
+    100% { transform: translateY(0px); }
+}
+
+/* Slots controls */
+
+.slots-controls {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 18px;
+    margin-bottom: 12px;
+}
+
+.bet-control span {
+    display: block;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.16em;
+    color: var(--muted);
+    margin-bottom: 6px;
+}
+
+.bet-input {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 6px 10px;
+    background: rgba(5, 7, 14, 0.9);
+    border-radius: 999px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.bet-input span {
+    min-width: 36px;
+    text-align: center;
+    font-weight: 600;
+}
+
+.bet-input button {
+    border-radius: 50%;
+    width: 22px;
+    height: 22px;
+    font-size: 14px;
+    cursor: pointer;
+    border: none;
+    background: rgba(255, 255, 255, 0.06);
+    color: var(--text);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    transition: background 0.1s ease, transform 0.1s ease;
+}
+
+.bet-input button:hover {
+    background: rgba(255, 255, 255, 0.14);
+    transform: translateY(-1px);
+}
+
+/* Slots footer / payouts */
+
+.slots-footer {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 16px;
+    align-items: center;
+    border-top: 1px solid rgba(255, 255, 255, 0.06);
+    padding-top: 12px;
+    margin-top: 6px;
+}
+
+.payout-table {
+    font-size: 12px;
+    color: var(--muted);
+}
+
+.payout-row {
+    display: grid;
+    grid-template-columns: 32px 1fr auto;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 4px;
+}
+
+.symbol-demo {
+    width: 26px;
+    height: 26px;
+    border-radius: 6px;
+    background-position: center;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-color: #05070d;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.symbol-seven { background-image: url("symbol-seven.png"); }
+.symbol-star  { background-image: url("symbol-star.png"); }
+.symbol-cherry { background-image: url("symbol-cherry.png"); }
+.symbol-bar   { background-image: url("symbol-bar.png"); }
+
+.payout-multiplier {
+    color: var(--accent);
+}
+
+/* Blackjack section */
+
+.blackjack-section {
+    margin-top: 40px;
+}
+
+.blackjack-card {
+    background: var(--card);
+    border-radius: 20px;
+    padding: 20px 18px 18px;
+    box-shadow: 0 20px 45px rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    position: relative;
+    overflow: hidden;
+}
+
+.blackjack-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 18px;
+    margin-bottom: 16px;
+}
+
+.blackjack-title {
+    margin: 0 0 4px;
+    font-size: 20px;
+}
+
+.blackjack-subtitle {
+    margin: 0;
+    font-size: 13px;
+    color: var(--muted);
+}
+
+.blackjack-credits {
+    text-align: right;
+}
+
+.blackjack-credits span {
+    display: block;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: var(--muted);
+}
+
+.blackjack-credits strong {
+    display: block;
+    font-size: 20px;
+    color: var(--accent);
+    text-shadow: 0 0 12px rgba(57, 255, 20, 1);
+}
+
+.blackjack-body {
+    padding-top: 8px;
+}
+
+.blackjack-table {
+    border-radius: 14px;
+    padding: 14px 14px 10px;
+    background: radial-gradient(circle at top, rgba(57, 255, 20, 0.18), rgba(0, 0, 0, 0.9));
+    box-shadow: inset 0 0 24px rgba(0, 0, 0, 0.8);
+    margin-bottom: 14px;
+}
+
+.bj-row {
+    display: grid;
+    grid-template-columns: 70px 1fr 40px;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 8px;
+}
+
+.bj-label {
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: var(--muted);
+}
+
+.bj-hand {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.bj-card {
+    min-width: 30px;
+    padding: 4px 6px;
+    border-radius: 6px;
+    background: rgba(5, 7, 14, 0.95);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    font-size: 13px;
+    text-align: center;
+}
+
+.bj-card.red {
+    color: #ff7b7b;
+}
+
+.bj-card.hidden {
+    background: linear-gradient(135deg, rgba(57, 255, 20, 0.4), rgba(5, 7, 14, 1));
+    border-color: rgba(57, 255, 20, 0.9);
+    color: #020308;
+}
+
+.bj-score {
+    font-size: 14px;
+    font-weight: 600;
+    text-align: right;
+    color: var(--text);
+}
+
+.blackjack-controls {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 10px;
+}
+
+.bj-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.bj-message {
+    font-size: 13px;
+    min-height: 18px;
+    text-align: right;
+    color: var(--muted);
+}
+
+.bj-message.win {
+    color: var(--accent);
+    text-shadow: 0 0 8px rgba(57, 255, 20, 0.8);
+}
+
+.bj-message.lose {
+    color: var(--danger);
+}
+
+.bj-message.push {
+    color: var(--muted);
+}
+
+/* Message */
+
+.message {
+    flex: 1;
+    text-align: right;
+    font-size: 13px;
+    min-height: 18px;
+}
+
+.message.win {
+    color: var(--accent);
+    text-shadow: 0 0 10px rgba(57, 255, 20, 0.9);
+}
+
+.message.lose {
+    color: var(--muted);
+}
+
+.message.error {
+    color: var(--danger);
+}
+
+/* Footer */
+
+.site-footer {
+    text-align: center;
+    padding: 20px 12px 42px;
+    font-size: 12px;
+    color: var(--muted);
+}
+
+/* Responsive */
+
+@media (max-width: 720px) {
+    main {
+        padding-top: 80px;
+    }
+
+    .slots-card,
+    .blackjack-card {
+        padding: 16px 12px 16px;
+    }
+
+    .slots-controls,
+    .blackjack-controls {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .slots-credits,
+    .blackjack-credits {
+        text-align: left;
+    }
+
+    .slot-machine {
+        padding: 10px;
+    }
+
+    .reel {
+        width: 62px;
+        height: 62px;
+        background-size: 50%;
+    }
+
+    .nav a {
+        font-size: 12px;
+        margin-left: 12px;
+    }
+}
+
+@media (max-width: 480px) {
+    .logo-mark {
+        width: 24px;
+        height: 24px;
+        font-size: 14px;
+    }
+    .logo-title {
+        font-size: 12px;
+    }
+    .logo-subtitle {
+        font-size: 9px;
+    }
+    }
