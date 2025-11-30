@@ -20,9 +20,9 @@ const betAmountEl      = document.getElementById("bet-amount");
 const betDecreaseBtn   = document.getElementById("bet-decrease");
 const betIncreaseBtn   = document.getElementById("bet-increase");
 const lastWinEl        = document.getElementById("last-win");
-const soundSpin  = document.getElementById("sound-spin");
-const soundWin   = document.getElementById("sound-win");
-const soundClick = document.getElementById("sound-click");
+const soundSpin        = document.getElementById("sound-spin");
+const soundWin         = document.getElementById("sound-win");
+const soundClick       = document.getElementById("sound-click");
 const reelEls = [
     document.getElementById("reel1"),
     document.getElementById("reel2"),
