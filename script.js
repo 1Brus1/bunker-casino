@@ -1,4 +1,4 @@
-// Symbol configuration
+// Symbol configuration for slots
 const SYMBOLS = [
     { key: "seven",   image: "symbol-seven.png",   multiplier: 50 },
     { key: "star",    image: "symbol-star.png",    multiplier: 25 },
@@ -8,10 +8,11 @@ const SYMBOLS = [
     { key: "lemon",   image: "symbol-lemon.png",   multiplier: 5  }
 ];
 
-// DOM elements
+// DOM elements – credits & common
 const creditsEl        = document.getElementById("credits");
 const creditsHeroEl    = document.getElementById("credits-hero");
 const bjCreditsMirror  = document.getElementById("bj-credits-mirror");
+const rouCreditsMirror = document.getElementById("rou-credits-mirror");
 const messageEl        = document.getElementById("message");
 const spinBtn          = document.getElementById("spin-btn");
 const addCreditsBtn    = document.getElementById("add-credits-btn");
@@ -20,7 +21,6 @@ const betAmountEl      = document.getElementById("bet-amount");
 const betDecreaseBtn   = document.getElementById("bet-decrease");
 const betIncreaseBtn   = document.getElementById("bet-increase");
 const lastWinEl        = document.getElementById("last-win");
-const statSessionNetEl = document.getElementById("stat-session-net");
 
 const reelEls = [
     document.getElementById("reel1"),
@@ -43,29 +43,39 @@ const bjDealBtn        = document.getElementById("bj-deal-btn");
 const bjHitBtn         = document.getElementById("bj-hit-btn");
 const bjStandBtn       = document.getElementById("bj-stand-btn");
 
+// Roulette DOM
+const rouBetAmountEl    = document.getElementById("rou-bet-amount");
+const rouBetDecreaseBtn = document.getElementById("rou-bet-decrease");
+const rouBetIncreaseBtn = document.getElementById("rou-bet-increase");
+const rouSpinBtn        = document.getElementById("rou-spin-btn");
+const rouMessageEl      = document.getElementById("rou-message");
+const rouLastResultEl   = document.getElementById("rou-last-result");
+const rouColorRedBtn    = document.getElementById("rou-color-red");
+const rouColorBlackBtn  = document.getElementById("rou-color-black");
+const rouColorGreenBtn  = document.getElementById("rou-color-green");
+const rouletteWheelEl   = document.getElementById("roulette-wheel");
+
+// Stats DOM
+const statTotalSpinsEl     = document.getElementById("stat-total-spins");
+const statTotalBjHandsEl   = document.getElementById("stat-total-bj-hands");
+const statTotalBjWinsEl    = document.getElementById("stat-total-bj-wins");
+const statTotalRouSpinsEl  = document.getElementById("stat-total-rou-spins");
+const statTotalRouWinsEl   = document.getElementById("stat-total-rou-wins");
+const statBiggestWinEl     = document.getElementById("stat-biggest-win");
+const statSessionNetEl     = document.getElementById("stat-session-net");
+
 // Audio elements
 const soundSpin  = document.getElementById("sound-spin");
 const soundWin   = document.getElementById("sound-win");
 const soundClick = document.getElementById("sound-click");
 
-// State (shared credits)
+// Shared credits state
 let credits   = 0;
 let betAmount = 10;
 let lastWin   = 0;
 const MIN_BET = 5;
 const MAX_BET = 100;
 let isSpinning = false;
-let stats = {
-    totalSpins: 0,
-    totalBjHands: 0,
-    totalBjWins: 0,
-    biggestWin: 0 // in credits
-};
-
-let sessionStartCredits = 0;
-
-
-
 
 // Blackjack state
 let bjBetAmount  = 10;
@@ -75,7 +85,24 @@ let bjDealerHand = [];
 let bjInRound    = false;
 let bjCurrentBet = 0;
 
-// Helpers
+// Roulette state
+let rouBetAmount    = 10;
+let rouSelectedColor = "red"; // "red" | "black" | "green"
+let rouIsSpinning   = false;
+
+// Stats state
+let stats = {
+    totalSpins: 0,
+    totalBjHands: 0,
+    totalBjWins: 0,
+    totalRouSpins: 0,
+    totalRouWins: 0,
+    biggestWin: 0
+};
+
+let sessionStartCredits = 0;
+
+// Helpers: credits & stats
 function loadCredits() {
     const stored = localStorage.getItem("bunker_slots_credits");
     if (stored) {
@@ -86,10 +113,65 @@ function loadCredits() {
     updateCreditsDisplay();
 }
 
+function updateCreditsDisplay() {
+    creditsEl.textContent = credits;
+    creditsHeroEl.textContent = credits;
+    if (bjCreditsMirror)  bjCreditsMirror.textContent  = credits;
+    if (rouCreditsMirror) rouCreditsMirror.textContent = credits;
+
+    localStorage.setItem("bunker_slots_credits", credits);
+    updateSessionNetDisplay();
+}
+
+function loadStats() {
+    const stored = localStorage.getItem("bunker_stats_v1");
+    if (stored) {
+        try {
+            const parsed = JSON.parse(stored);
+            stats = {
+                totalSpins:    parsed.totalSpins    || 0,
+                totalBjHands:  parsed.totalBjHands || 0,
+                totalBjWins:   parsed.totalBjWins  || 0,
+                totalRouSpins: parsed.totalRouSpins || 0,
+                totalRouWins:  parsed.totalRouWins  || 0,
+                biggestWin:    parsed.biggestWin   || 0
+            };
+        } catch (e) {
+            stats = {
+                totalSpins: 0,
+                totalBjHands: 0,
+                totalBjWins: 0,
+                totalRouSpins: 0,
+                totalRouWins: 0,
+                biggestWin: 0
+            };
+        }
+    }
+    updateStatsDisplay();
+}
+
+function saveStats() {
+    localStorage.setItem("bunker_stats_v1", JSON.stringify(stats));
+}
+
+function updateStatsDisplay() {
+    if (statTotalSpinsEl)    statTotalSpinsEl.textContent    = stats.totalSpins;
+    if (statTotalBjHandsEl)  statTotalBjHandsEl.textContent  = stats.totalBjHands;
+    if (statTotalBjWinsEl)   statTotalBjWinsEl.textContent   = stats.totalBjWins;
+    if (statTotalRouSpinsEl) statTotalRouSpinsEl.textContent = stats.totalRouSpins;
+    if (statTotalRouWinsEl)  statTotalRouWinsEl.textContent  = stats.totalRouWins;
+    if (statBiggestWinEl)    statBiggestWinEl.textContent    = stats.biggestWin;
+}
+
+function bumpBiggestWin(winAmount) {
+    if (winAmount > stats.biggestWin) {
+        stats.biggestWin = winAmount;
+    }
+}
+
 function updateSessionNetDisplay() {
     if (!statSessionNetEl) return;
     const net = credits - sessionStartCredits;
-
     statSessionNetEl.textContent = net;
 
     statSessionNetEl.classList.remove(
@@ -102,16 +184,6 @@ function updateSessionNetDisplay() {
     } else if (net < 0) {
         statSessionNetEl.classList.add("stats-session-negative");
     }
-}
-
-function updateCreditsDisplay() {
-    creditsEl.textContent = credits;
-    creditsHeroEl.textContent = credits;
-    if (bjCreditsMirror) {
-        bjCreditsMirror.textContent = credits;
-    }
-    localStorage.setItem("bunker_slots_credits", credits);
-    updateSessionNetDisplay();
 }
 
 function updateBetDisplay() {
@@ -131,6 +203,7 @@ function updateLastWinDisplay() {
     }
 }
 
+// Slots helpers
 function randomSymbol() {
     const index = Math.floor(Math.random() * SYMBOLS.length);
     return SYMBOLS[index];
@@ -193,11 +266,14 @@ function spin() {
 
         const winAmount = evaluateWin(resultSymbols, betAmount);
 
+        stats.totalSpins += 1;
+
         if (winAmount > 0) {
             credits += winAmount;
             updateCreditsDisplay();
 
             lastWin = winAmount;
+            bumpBiggestWin(winAmount);
             updateLastWinDisplay();
 
             messageEl.textContent = `WIN +${winAmount} credits`;
@@ -211,6 +287,9 @@ function spin() {
             messageEl.textContent = "No win. Try again.";
             messageEl.classList.add("lose");
         }
+
+        saveStats();
+        updateStatsDisplay();
 
         isSpinning = false;
         spinBtn.disabled = false;
@@ -236,7 +315,6 @@ function createDeck() {
             deck.push({ rank: r, suit: s });
         }
     }
-    // shuffle
     for (let i = deck.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
         [deck[i], deck[j]] = [deck[j], deck[i]];
@@ -313,7 +391,6 @@ function startBlackjackRound() {
     bjDealerHand = [];
     bjInRound = true;
 
-    // initial deal
     bjPlayerHand.push(bjDeck.pop());
     bjDealerHand.push(bjDeck.pop());
     bjPlayerHand.push(bjDeck.pop());
@@ -331,7 +408,6 @@ function startBlackjackRound() {
     bjStandBtn.disabled = false;
 
     if (playerVal === 21) {
-        // player blackjack on deal
         finishBlackjackRound(true, false);
     }
 }
@@ -349,7 +425,7 @@ function hitBlackjack() {
     bjPlayerScoreEl.textContent = playerVal;
 
     if (playerVal > 21) {
-        finishBlackjackRound(false, true); // busted
+        finishBlackjackRound(false, true);
     }
 }
 
@@ -358,7 +434,6 @@ function standBlackjack() {
 
     playSound(soundClick);
 
-    // Dealer reveals and draws to 17+
     renderHand(bjDealerHand, bjDealerHandEl, false);
     let dealerVal = handValue(bjDealerHand);
     while (dealerVal < 17) {
@@ -386,7 +461,7 @@ function finishBlackjackRound(fromBlackjack, playerBusted) {
         outcome = "lose";
         payout = 0;
     } else if (fromBlackjack && playerVal === 21) {
-        payout = Math.round(bjCurrentBet * 2.5); // 1.5x profit
+        payout = Math.round(bjCurrentBet * 2.5);
         outcome = "blackjack";
     } else if (dealerVal > 21) {
         payout = bjCurrentBet * 2;
@@ -402,7 +477,14 @@ function finishBlackjackRound(fromBlackjack, playerBusted) {
         outcome = "push";
     }
 
+    stats.totalBjHands += 1;
+
     if (payout > 0) {
+        if (outcome === "blackjack" || outcome === "win") {
+            stats.totalBjWins += 1;
+            bumpBiggestWin(payout);
+        }
+
         credits += payout;
         updateCreditsDisplay();
     }
@@ -422,10 +504,122 @@ function finishBlackjackRound(fromBlackjack, playerBusted) {
         bjMessageEl.classList.add("lose");
     }
 
+    saveStats();
+    updateStatsDisplay();
+
     bjInRound = false;
     bjDealBtn.disabled = false;
     bjHitBtn.disabled = true;
     bjStandBtn.disabled = true;
+}
+
+// Roulette helpers
+function setRouletteColor(color) {
+    rouSelectedColor = color;
+
+    [rouColorRedBtn, rouColorBlackBtn, rouColorGreenBtn].forEach((btn) => {
+        if (!btn) return;
+        btn.classList.remove("active");
+    });
+
+    if (color === "red" && rouColorRedBtn) rouColorRedBtn.classList.add("active");
+    if (color === "black" && rouColorBlackBtn) rouColorBlackBtn.classList.add("active");
+    if (color === "green" && rouColorGreenBtn) rouColorGreenBtn.classList.add("active");
+}
+
+// European roulette color rules (0–36)
+function randomRouletteResult() {
+    const n = Math.floor(Math.random() * 37); // 0-36
+    let color;
+
+    if (n === 0) {
+        color = "green";
+    } else {
+        const inFirstOrSecondDozen =
+            (n >= 1 && n <= 10) || (n >= 19 && n <= 28);
+        const isOdd = n % 2 === 1;
+
+        if (inFirstOrSecondDozen) {
+            color = isOdd ? "red" : "black";
+        } else {
+            color = isOdd ? "black" : "red";
+        }
+    }
+
+    return { number: n, color };
+}
+
+function evaluateRouletteWin(result, bet, selectedColor) {
+    if (result.color !== selectedColor) {
+        return { winAmount: 0 };
+    }
+
+    let multiplier;
+    if (selectedColor === "green") {
+        multiplier = 14; // rare, higher payout
+    } else {
+        multiplier = 2; // red / black
+    }
+
+    const payout = bet * multiplier;
+    return { winAmount: payout };
+}
+
+function spinRoulette() {
+    if (rouIsSpinning) return;
+
+    rouMessageEl.textContent = "";
+    rouMessageEl.className = "roulette-message";
+
+    if (credits < rouBetAmount) {
+        rouMessageEl.textContent = "Not enough credits. Add more demo credits.";
+        rouMessageEl.classList.add("lose");
+        return;
+    }
+
+    playSound(soundSpin);
+
+    credits -= rouBetAmount;
+    updateCreditsDisplay();
+
+    stats.totalRouSpins += 1;
+
+    rouIsSpinning = true;
+    rouSpinBtn.disabled = true;
+    if (rouletteWheelEl) {
+        rouletteWheelEl.classList.add("spinning");
+    }
+
+    setTimeout(() => {
+        const result = randomRouletteResult();
+        const { winAmount } = evaluateRouletteWin(result, rouBetAmount, rouSelectedColor);
+
+        rouLastResultEl.textContent = `${result.number} ${result.color.toUpperCase()}`;
+
+        if (winAmount > 0) {
+            credits += winAmount;
+            updateCreditsDisplay();
+
+            stats.totalRouWins += 1;
+            bumpBiggestWin(winAmount);
+
+            rouMessageEl.textContent = `You win +${winAmount} credits`;
+            rouMessageEl.classList.add("win");
+            playSound(soundWin);
+        } else {
+            rouMessageEl.textContent = "No win. Try again.";
+            rouMessageEl.classList.add("lose");
+        }
+
+        saveStats();
+        updateStatsDisplay();
+
+        rouIsSpinning = false;
+        rouSpinBtn.disabled = false;
+        if (rouletteWheelEl) {
+            rouletteWheelEl.classList.remove("spinning");
+        }
+    }, 900);
 }
 
 // Events – Slots
@@ -455,11 +649,18 @@ resetCreditsBtn.addEventListener("click", () => {
 
     credits = 500;
     lastWin = 0;
-    stats = { totalSpins: 0, totalBjHands: 0, totalBjWins: 0, biggestWin: 0 };
+    stats = {
+        totalSpins: 0,
+        totalBjHands: 0,
+        totalBjWins: 0,
+        totalRouSpins: 0,
+        totalRouWins: 0,
+        biggestWin: 0
+    };
     localStorage.removeItem("bunker_slots_credits");
     localStorage.removeItem("bunker_stats_v1");
 
-    sessionStartCredits = credits;  // new baseline
+    sessionStartCredits = credits;
     updateCreditsDisplay();
     updateLastWinDisplay();
     updateStatsDisplay();
@@ -468,7 +669,6 @@ resetCreditsBtn.addEventListener("click", () => {
     messageEl.textContent = "Progress reset. Back to 500 credits.";
     messageEl.className = "message";
 });
-
 
 betDecreaseBtn.addEventListener("click", () => {
     betAmount = Math.max(MIN_BET, betAmount - 5);
@@ -488,28 +688,4 @@ bjBetDecreaseBtn.addEventListener("click", () => {
 
 bjBetIncreaseBtn.addEventListener("click", () => {
     bjBetAmount = Math.min(MAX_BET, bjBetAmount + 5);
-    bjBetAmountEl.textContent = bjBetAmount;
-});
-
-bjDealBtn.addEventListener("click", startBlackjackRound);
-bjHitBtn.addEventListener("click", hitBlackjack);
-bjStandBtn.addEventListener("click", standBlackjack);
-
-// Footer year
-if (YEAR_EL) {
-    YEAR_EL.textContent = new Date().getFullYear();
-}
-
-// Initial render
-// Initial render
-loadCredits();
-sessionStartCredits = credits;   // capture starting credits for this session
-loadStats();
-updateBetDisplay();
-updateLastWinDisplay();
-bjBetAmountEl.textContent = bjBetAmount;
-updateSessionNetDisplay();
-reelEls.forEach((reel) => {
-    const symbol = randomSymbol();
-    setReelSymbol(reel, symbol);
-});
+    b
