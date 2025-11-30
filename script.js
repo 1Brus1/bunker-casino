@@ -83,7 +83,7 @@ function setReelSymbol(reelEl, symbol) {
     reelEl.style.backgroundImage = `url(${symbol.image})`;
 }
 
-5function playSound(audioEl) {
+function playSound(audioEl) {
     if (!audioEl) return;
     try {
         audioEl.currentTime = 0;
@@ -102,7 +102,6 @@ function triggerWinFlicker() {
 function spin() {
     if (isSpinning) return;
     playSound(soundSpin);
-
     messageEl.textContent = "";
     messageEl.className = "message";
 
