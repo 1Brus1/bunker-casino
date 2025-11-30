@@ -20,7 +20,9 @@ const betAmountEl      = document.getElementById("bet-amount");
 const betDecreaseBtn   = document.getElementById("bet-decrease");
 const betIncreaseBtn   = document.getElementById("bet-increase");
 const lastWinEl        = document.getElementById("last-win");
-
+const soundSpin  = document.getElementById("sound-spin");
+const soundWin   = document.getElementById("sound-win");
+const soundClick = document.getElementById("sound-click");
 const reelEls = [
     document.getElementById("reel1"),
     document.getElementById("reel2"),
@@ -79,6 +81,16 @@ function randomSymbol() {
 function setReelSymbol(reelEl, symbol) {
     reelEl.dataset.symbol = symbol.key;
     reelEl.style.backgroundImage = `url(${symbol.image})`;
+}
+
+5function playSound(audioEl) {
+    if (!audioEl) return;
+    try {
+        audioEl.currentTime = 0;
+        audioEl.play();
+    } catch (e) {
+        // Ignore play errors (e.g. autoplay restrictions)
+    }
 }
 
 // Neon flicker hook (extend later if you want)
