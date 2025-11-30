@@ -1,50 +1,25 @@
 // Symbol configuration
 // Each symbol has a key, image path, and payout multiplier for a triple.
-const lastWinEl = document.getElementById("last-win");
-const resetCreditsBtn = document.getElementById("reset-credits-btn");
-
 const SYMBOLS = [
-    {
-        key: "seven",
-        image: "symbol-seven.png",
-        multiplier: 50
-    },
-    {
-        key: "star",
-        image: "symbol-star.png",
-        multiplier: 25
-    },
-    {
-        key: "cherry",
-        image: "symbol-cherry.png",
-        multiplier: 10
-    },
-    {
-        key: "bar",
-        image: "symbol-bar.png",
-        multiplier: 5
-    },
-    {
-        key: "diamond",
-        image: "symbol-diamond.png",
-        multiplier: 5
-    },
-    {
-        key: "lemon",
-        image: "symbol-lemon.png",
-        multiplier: 5
-    }
+    { key: "seven",   image: "symbol-seven.png",   multiplier: 50 },
+    { key: "star",    image: "symbol-star.png",    multiplier: 25 },
+    { key: "cherry",  image: "symbol-cherry.png",  multiplier: 10 },
+    { key: "bar",     image: "symbol-bar.png",     multiplier: 5  },
+    { key: "diamond", image: "symbol-diamond.png", multiplier: 5  },
+    { key: "lemon",   image: "symbol-lemon.png",   multiplier: 5  }
 ];
 
 // DOM elements
-const creditsEl = document.getElementById("credits");
-const creditsHeroEl = document.getElementById("credits-hero");
-const messageEl = document.getElementById("message");
-const spinBtn = document.getElementById("spin-btn");
-const addCreditsBtn = document.getElementById("add-credits-btn");
-const betAmountEl = document.getElementById("bet-amount");
-const betDecreaseBtn = document.getElementById("bet-decrease");
-const betIncreaseBtn = document.getElementById("bet-increase");
+const creditsEl        = document.getElementById("credits");
+const creditsHeroEl    = document.getElementById("credits-hero");
+const messageEl        = document.getElementById("message");
+const spinBtn          = document.getElementById("spin-btn");
+const addCreditsBtn    = document.getElementById("add-credits-btn");
+const resetCreditsBtn  = document.getElementById("reset-credits-btn");
+const betAmountEl      = document.getElementById("bet-amount");
+const betDecreaseBtn   = document.getElementById("bet-decrease");
+const betIncreaseBtn   = document.getElementById("bet-increase");
+const lastWinEl        = document.getElementById("last-win");
 
 const reelEls = [
     document.getElementById("reel1"),
@@ -55,13 +30,14 @@ const reelEls = [
 const YEAR_EL = document.getElementById("year");
 
 // State
-let credits = 0;
+let credits  = 0;
 let betAmount = 10;
-let lastWin = 0;
+let lastWin   = 0;
 const MIN_BET = 5;
 const MAX_BET = 100;
+let isSpinning = false;
 
-// Init
+// Init helpers
 function loadCredits() {
     const stored = localStorage.getItem("bunker_slots_credits");
     if (stored) {
@@ -82,12 +58,9 @@ function updateBetDisplay() {
     betAmountEl.textContent = betAmount;
 }
 
-updateLastWinDisplay();
-
 function updateLastWinDisplay() {
     if (!lastWinEl) return;
 
-    // Show + or – sign
     const sign = lastWin > 0 ? "+" : lastWin < 0 ? "−" : "";
     const absValue = Math.abs(lastWin);
 
@@ -110,16 +83,13 @@ function setReelSymbol(reelEl, symbol) {
 
 // Neon flicker hook (extend later if you want)
 function triggerWinFlicker() {
-    // You can add extra CSS class effects here if desired.
+    // Add visual FX here if you want (temporary class on body/card).
 }
 
 // Spin handling
-let isSpinning = false;
-
 function spin() {
     if (isSpinning) return;
 
-    // Reset message
     messageEl.textContent = "";
     messageEl.className = "message";
 
@@ -154,24 +124,23 @@ function spin() {
 
         const winAmount = evaluateWin(resultSymbols, betAmount);
 
-if (winAmount > 0) {
-    credits += winAmount;
-    updateCreditsDisplay();
+        if (winAmount > 0) {
+            credits += winAmount;
+            updateCreditsDisplay();
 
-    lastWin = winAmount;
-    updateLastWinDisplay();
+            lastWin = winAmount;
+            updateLastWinDisplay();
 
-    messageEl.textContent = `WIN +${winAmount} credits`;
-    messageEl.classList.add("win");
-    triggerWinFlicker();
-} else {
-    // Lost the bet amount
-    lastWin = -betAmount;
-    updateLastWinDisplay();
+            messageEl.textContent = `WIN +${winAmount} credits`;
+            messageEl.classList.add("win");
+            triggerWinFlicker();
+        } else {
+            lastWin = -betAmount;
+            updateLastWinDisplay();
 
-    messageEl.textContent = "No win. Try again.";
-    messageEl.classList.add("lose");
-}
+            messageEl.textContent = "No win. Try again.";
+            messageEl.classList.add("lose");
+        }
 
         isSpinning = false;
         spinBtn.disabled = false;
@@ -191,7 +160,6 @@ function evaluateWin(symbols, bet) {
 spinBtn.addEventListener("click", spin);
 
 addCreditsBtn.addEventListener("click", () => {
-    addCreditsBtn.addEventListener("click", () => {
     const boost = 500;
     credits += boost;
     updateCreditsDisplay();
@@ -203,9 +171,9 @@ addCreditsBtn.addEventListener("click", () => {
     messageEl.className = "message win";
 });
 
-    resetCreditsBtn.addEventListener("click", () => {
+resetCreditsBtn.addEventListener("click", () => {
     const confirmReset = window.confirm(
-    "Reset your BUNKER Casino progress? This will set credits back to 500 and clear history."
+        "Reset your BUNKER Casino progress? This will set credits back to 500 and clear history."
     );
     if (!confirmReset) return;
 
@@ -237,6 +205,7 @@ if (YEAR_EL) {
 // Initial render
 loadCredits();
 updateBetDisplay();
+updateLastWinDisplay();
 reelEls.forEach((reel) => {
     const symbol = randomSymbol();
     setReelSymbol(reel, symbol);
