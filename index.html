@@ -30,3 +30,164 @@
     <script src="script.js"></script>
 </body>
 </html>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>BUNKER Casino | Slots</title>
+    <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+    <div class="bg-overlay"></div>
+
+    <header class="site-header">
+        <div class="logo">
+            <span class="logo-accent">BUNKER</span> CASINO
+        </div>
+        <nav class="nav">
+            <a href="#home">Home</a>
+            <a href="#slots">Slots</a>
+        </nav>
+    </header>
+
+    <main>
+        <!-- HOME / HERO -->
+        <section id="home" class="hero">
+            <div class="hero-content">
+                <h1 class="hero-title">Welcome to <span>BUNKER</span> CASINO</h1>
+                <p class="hero-subtitle">
+                    Neon-soaked, credit-only casino. No real money. Pure vibes.
+                </p>
+                <div class="hero-actions">
+                    <a href="#slots" class="primary-btn">Play Slots</a>
+                    <button class="secondary-btn" id="add-credits-btn">
+                        + Add Demo Credits
+                    </button>
+                </div>
+                <div class="hero-metrics">
+                    <div class="metric-card">
+                        <span class="metric-label">Your credits</span>
+                        <span class="metric-value" id="credits-hero">0</span>
+                    </div>
+                    <div class="metric-card">
+                        <span class="metric-label">RTP (fake)</span>
+                        <span class="metric-value">96%</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- GAMES GRID (home page cards) -->
+        <section class="games-grid-section">
+            <h2 class="section-title">Games</h2>
+            <div class="games-grid">
+                <article class="game-card">
+                    <div class="game-tag">Featured</div>
+                    <h3>BUNKER Neon Slots</h3>
+                    <p>
+                        Classic 3-reel slot machine with glowing symbols,
+                        smooth spins, and demo credits. No signup, no deposits.
+                    </p>
+                    <ul class="game-meta">
+                        <li>3 reels</li>
+                        <li>Fake credits only</li>
+                        <li>Neon visual style</li>
+                    </ul>
+                    <a href="#slots" class="primary-btn small">Play now</a>
+                </article>
+
+                <article class="game-card disabled">
+                    <div class="game-tag">Coming soon</div>
+                    <h3>BUNKER Blackjack</h3>
+                    <p>Sleek blackjack table UI with instant plays and crisp animations.</p>
+                </article>
+
+                <article class="game-card disabled">
+                    <div class="game-tag">Coming soon</div>
+                    <h3>BUNKER Roulette</h3>
+                    <p>European wheel, clean layout, and bold neon highlights.</p>
+                </article>
+            </div>
+        </section>
+
+        <!-- SLOTS SECTION -->
+        <section id="slots" class="slots-section">
+            <div class="slots-card neon-border">
+                <div class="slots-header">
+                    <div>
+                        <h2 class="slots-title">BUNKER Neon Slots</h2>
+                        <p class="slots-subtitle">Bet credits, spin reels, chase triples.</p>
+                    </div>
+                    <div class="slots-credits">
+                        <span>Credits</span>
+                        <strong id="credits">0</strong>
+                    </div>
+                </div>
+
+                <div class="slots-body">
+                    <div class="slot-machine">
+                        <div class="reel-wrapper">
+                            <div class="reel" id="reel1"></div>
+                        </div>
+                        <div class="reel-wrapper">
+                            <div class="reel" id="reel2"></div>
+                        </div>
+                        <div class="reel-wrapper">
+                            <div class="reel" id="reel3"></div>
+                        </div>
+                    </div>
+
+                    <div class="slots-controls">
+                        <div class="bet-control">
+                            <span>Bet per spin</span>
+                            <div class="bet-input">
+                                <button id="bet-decrease">-</button>
+                                <span id="bet-amount">10</span>
+                                <button id="bet-increase">+</button>
+                            </div>
+                        </div>
+                        <button id="spin-btn" class="primary-btn large">
+                            SPIN
+                        </button>
+                    </div>
+                </div>
+
+                <div class="slots-footer">
+                    <div class="payout-table">
+                        <div class="payout-row">
+                            <span class="symbol-demo symbol-seven"></span>
+                            <span>Triple 7</span>
+                            <span class="payout-multiplier">x50</span>
+                        </div>
+                        <div class="payout-row">
+                            <span class="symbol-demo symbol-star"></span>
+                            <span>Triple Star</span>
+                            <span class="payout-multiplier">x25</span>
+                        </div>
+                        <div class="payout-row">
+                            <span class="symbol-demo symbol-cherry"></span>
+                            <span>Triple Cherry</span>
+                            <span class="payout-multiplier">x10</span>
+                        </div>
+                        <div class="payout-row">
+                            <span class="symbol-demo symbol-bar"></span>
+                            <span>Triple BAR / others</span>
+                            <span class="payout-multiplier">x5</span>
+                        </div>
+                    </div>
+                    <div class="message" id="message"></div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="site-footer">
+        <p>Fake casino. No real money. Built for fun & UI experiments.</p>
+        <p>&copy; <span id="year"></span> BUNKER.</p>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+                            </html>
