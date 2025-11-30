@@ -3,32 +3,32 @@
 const SYMBOLS = [
     {
         key: "seven",
-        image: "assets/symbol-seven.png",
+        image: "symbol-seven.png",
         multiplier: 50
     },
     {
         key: "star",
-        image: "assets/symbol-star.png",
+        image: "symbol-star.png",
         multiplier: 25
     },
     {
         key: "cherry",
-        image: "assets/symbol-cherry.png",
+        image: "symbol-cherry.png",
         multiplier: 10
     },
     {
         key: "bar",
-        image: "assets/symbol-bar.png",
+        image: "symbol-bar.png",
         multiplier: 5
     },
     {
         key: "diamond",
-        image: "assets/symbol-diamond.png",
+        image: "symbol-diamond.png",
         multiplier: 5
     },
     {
         key: "lemon",
-        image: "assets/symbol-lemon.png",
+        image: "symbol-lemon.png",
         multiplier: 5
     }
 ];
