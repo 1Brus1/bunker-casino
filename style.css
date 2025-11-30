@@ -719,3 +719,29 @@ button:hover {
     font-size: 20px;
     min-height: 30px;
 }
+
+/* CHIP LAST WIN */
+.last-win-chip {
+    margin-top: 6px;
+    display: inline-flex;
+    align-items: baseline;
+    gap: 4px;
+    padding: 4px 10px;
+    border-radius: 999px;
+    background: rgba(5, 10, 5, 0.85);
+    border: 1px solid rgba(57, 255, 20, 0.35);
+    box-shadow: 0 0 10px rgba(57, 255, 20, 0.35);
+}
+
+.last-win-label {
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.16em;
+    color: var(--muted);
+}
+
+.last-win-value {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--accent);
+}
