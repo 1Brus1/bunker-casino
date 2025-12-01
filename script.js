@@ -894,3 +894,15 @@ reelEls.forEach((reel) => {
     setReelSymbol(reel, symbol);
 });
 updateLastWinDisplay();
+
+// Mobile menu logic
+const mbtn=document.getElementById("mobile-menu-btn");
+const mnav=document.getElementById("mobile-nav");
+const mclose=document.getElementById("mobile-nav-close");
+const mback=document.getElementById("mobile-backdrop");
+
+if(mbtn){
+ mbtn.onclick=()=>{ mnav.classList.add("open"); mback.classList.add("show"); };
+ mclose.onclick=()=>{ mnav.classList.remove("open"); mback.classList.remove("show"); };
+ mback.onclick=()=>{ mnav.classList.remove("open"); mback.classList.remove("show"); };
+}
