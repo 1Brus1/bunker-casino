@@ -1600,3 +1600,27 @@ main {
         flex: 1 1 100%;
     }
 }
+
+
+/* CLEAN GAME LABELS — Minimal Neon-Tech */
+.game-label {
+    display: inline-flex;
+    align-items: center;
+    padding: 4px 12px;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    border-radius: 12px;
+    text-transform: uppercase;
+    border: 1px solid var(--accent);
+    color: var(--accent);
+    background: rgba(255,255,255,0.03);
+    backdrop-filter: blur(4px);
+    margin-bottom: 12px;
+    transition: opacity .2s ease;
+}
+.game-label:hover { opacity: 0.8; }
+.slots-label { --accent: #4eff4e; }
+.table-label { --accent: #5abaff; }
+.roulette-label { --accent: #ff6464; }
+
