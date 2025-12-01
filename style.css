@@ -72,13 +72,17 @@ main {
 .site-header {
     position: sticky;
     top: 0;
-    z-index: 10;
+    z-index: 20;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 14px 20px;
-    background: linear-gradient(to bottom, rgba(0, 0, 0, 0.9), rgba(0, 0, 0, 0));
-    backdrop-filter: blur(20px);
+
+    padding: 14px 22px;
+    background: rgba(0,0,0,0.55);
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+
+    border-bottom: 1px solid rgba(255,255,255,0.05);
 }
 
 .logo {
@@ -88,24 +92,13 @@ main {
     text-decoration: none;
 }
 
-.logo-mark {
-    width: 28px;
-    height: 28px;
-    border-radius: 999px;
-    background: radial-gradient(
-        circle at 30% 20%,
-        rgba(57, 255, 20, 0.9),
-        rgba(57, 255, 20, 0.15)
-    );
-    border: 1px solid rgba(57, 255, 20, 0.8);
-    box-shadow: 0 0 12px rgba(57, 255, 20, 0.8);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: 700;
-    font-size: 16px;
-    color: #020308;
 }
+
+.logo-mark {
+    width: 32px;
+    height: 32px;
+    font-size: 16px;
+
 
 .logo-text {
     display: flex;
@@ -128,66 +121,41 @@ main {
     color: var(--muted);
 }
 
+l/* NAV CLEANER & TIGHTER */
+.nav {
+    display: flex;
+    align-items: center;
+    gap: 22px;                     /* smaller spacing */
+}
+
 .nav a {
-    margin-left: 18px;
     font-size: 14px;
-    text-transform: uppercase;
     letter-spacing: 0.15em;
     color: var(--muted);
     text-decoration: none;
-    position: relative;
-}
-
-.nav a::after {
-    content: "";
-    position: absolute;
-    left: 0;
-    bottom: -4px;
-    width: 0;
-    height: 2px;
-    background: var(--accent);
-    box-shadow: 0 0 12px var(--accent);
-    transition: width 0.2s ease;
+    transition: color 0.15s ease, opacity 0.15s ease;
+    white-space: nowrap;           /* prevents wrapping */
 }
 
 .nav a:hover {
     color: var(--text);
+    opacity: 1;
 }
 
-.nav a:hover::after {
-    width: 100%;
-}
-
-/* Header actions / settings */
-
+/* SETTINGS ICON POSITION */
 .header-right {
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 18px;
 }
 
 .settings-btn {
-    border-radius: 999px;
-    width: 32px;
-    height: 32px;
-    border: 1px solid rgba(255, 255, 255, 0.18);
-    background: rgba(6, 8, 18, 0.95);
-    color: var(--muted);
-    font-size: 16px;
-    cursor: pointer;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    transition: background 0.12s ease, box-shadow 0.12s ease, color 0.12s ease,
-        transform 0.08s ease;
-}
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.1);
 
-.settings-btn:hover {
-    color: var(--accent);
-    background: rgba(18, 24, 40, 0.95);
-    box-shadow: 0 0 12px rgba(57, 255, 20, 0.7);
-    transform: translateY(-1px);
-}
 
 /* Settings overlay */
 
