@@ -1,11 +1,5 @@
-Alright, here’s the full updated style.css with:
-✅ Clean minimal + neon-tech header
-✅ Smaller game category labels
-✅ Session change + recent activity moved left and smaller
-✅ Everything wired together
-You can replace your whole style.css with this:
-Copy code
-Css
+
+
 :root {
     --bg: #020308;
     --bg-alt: #050712;
